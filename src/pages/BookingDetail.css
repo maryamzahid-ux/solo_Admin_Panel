@@ -13,11 +13,30 @@
   margin-bottom: 24px;
 }
 
+.booking-header-main {
+  flex: 1;
+  width: 100%;
+}
+
+.booking-id-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.booking-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .booking-id {
   font-size: 0.85rem;
   color: var(--text-muted);
   font-weight: 700;
-  margin-bottom: 4px;
 }
 
 .booking-service-title {
@@ -34,7 +53,7 @@
 
 .booking-points-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 24px;
   margin-top: 24px;
 }
@@ -52,6 +71,13 @@
   color: var(--text-main);
 }
 
+.detail-card {
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+}
+
 .detail-two-col {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -59,11 +85,8 @@
   margin-bottom: 24px;
 }
 
-.detail-card {
-  background: white;
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 24px;
+.mb-6 {
+  margin-bottom: 24px;
 }
 
 .card-title {
@@ -75,12 +98,6 @@
   letter-spacing: 0.02em;
 }
 
-.person-row {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-}
-
 .person-avatar-box {
   width: 44px;
   height: 44px;
@@ -90,6 +107,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .person-avatar-box.prof {
@@ -108,28 +126,35 @@
   color: var(--text-muted);
 }
 
+.payment-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .payment-row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 12px;
   font-size: 0.85rem;
+  align-items: center;
 }
 
 .payment-row.highlight {
   color: #d97706;
 }
 
-.payment-row.payout {
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border-color);
-  font-size: 0.95rem;
+.payment-row.total {
+  font-size: 1rem;
+  padding-top: 4px;
 }
 
-.payout-amount {
-  color: var(--primary);
-  font-weight: 800;
-  font-size: 1.2rem;
+.payment-value {
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.payment-row.highlight .payment-value {
+  color: inherit;
 }
 
 .notes-textarea {
@@ -148,16 +173,12 @@
   background: white;
 }
 
-.admin-actions-section {
-  padding: 32px;
-  margin-top: 24px;
-}
-
 .status-update-controls {
   display: flex;
   align-items: flex-end;
   gap: 16px;
   max-width: 600px;
+  margin-bottom: 24px;
 }
 
 .dropdown-with-label {
@@ -172,73 +193,41 @@
   color: var(--text-muted);
 }
 
-.btn-lg {
-  height: 48px;
-  padding: 0 32px;
+.dropdown-with-label label span {
+  color: #ef4444;
 }
 
 .action-card-btn {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 24px;
-  border-radius: 12px;
+  padding: 12px 16px;
+  border-radius: 20px;
   border: 1px solid var(--border-color);
-  gap: 12px;
+  gap: 8px;
   cursor: pointer;
   transition: all 0.2s;
-  background: white;
+  background: transparent;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .action-card-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  transform: translateY(-1px);
 }
-
-.btn-refund { color: #e11d48; background: #fff1f2; border-color: #fecdd3; }
-.btn-hold { color: #d97706; background: #fffbeb; border-color: #fef3c7; }
-.btn-release { color: #16a34a; background: #f0fdf4; border-color: #dcfce7; }
-.btn-stop { color: #64748b; background: #f8fafc; border-color: #e2e8f0; }
 
 .divider-light {
   height: 1px;
   background: #f1f5f9;
   width: 100%;
+  margin: 8px 0;
 }
 
 .payment-actions-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
   margin-top: 16px;
-}
-
-.edit-input-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  background: #f8fafc;
-  border: 1px solid var(--border-color);
-  padding: 2px 8px;
-  border-radius: 4px;
-}
-
-.small-edit-input {
-  border: none;
-  background: transparent;
-  width: 50px;
-  font-weight: 700;
-  font-size: 0.85rem;
-  outline: none;
-  text-align: right;
-  padding: 0;
-}
-
-.small-edit-input::-webkit-inner-spin-button,
-.small-edit-input::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
 }
 
 /* Added styles for layout update */
@@ -247,6 +236,7 @@
   background: #e8faed;
   border-radius: 8px;
   padding: 16px;
+  margin-top: 12px;
 }
 
 .address-label {
@@ -266,6 +256,7 @@
   border: 1px solid #fef08a;
   border-radius: 8px;
   padding: 16px;
+  margin-bottom: 24px;
 }
 
 .notes-label {
@@ -282,7 +273,7 @@
 
 .participants-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 16px;
 }
 
@@ -299,184 +290,74 @@
   color: #16a34a !important;
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .booking-detail-card {
-    padding: 24px;
-  }
-
-  .booking-points-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-  }
-
-  .detail-two-col {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  .payment-actions-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .admin-actions-section {
-    padding: 24px;
-  }
-}
-
-@media (max-width: 768px) {
-  .booking-detail-card {
-    padding: 20px;
-    margin-bottom: 16px;
-  }
-
-  .booking-header-row {
-    flex-direction: column;
-    gap: 16px;
-    align-items: flex-start;
-  }
-
-  .booking-points-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-    margin-top: 16px;
-  }
-
-  .detail-two-col {
-    margin-bottom: 16px;
-  }
-
-  .detail-card {
-    padding: 20px;
-  }
-
-  .person-row {
-    gap: 12px;
-  }
-
-  .person-avatar-box {
-    width: 40px;
-    height: 40px;
-  }
-
-  .status-update-controls {
-    flex-direction: column;
-    gap: 12px;
-    align-items: stretch;
-  }
-
-  .dropdown-with-label {
-    flex: none;
-  }
-
-  .btn-lg {
-    height: 44px;
-    padding: 0 24px;
-  }
-
-  .payment-actions-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .action-card-btn {
-    padding: 20px;
-  }
-
-  .participants-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .admin-actions-section {
-    padding: 20px;
-    margin-top: 16px;
-  }
-}
-
-@media (max-width: 480px) {
-  .booking-detail-card {
-    padding: 16px;
-  }
-
-  .detail-card {
-    padding: 16px;
-  }
-
-  .booking-service-title {
-    font-size: 1.1rem;
-  }
-
-  .card-title {
-    font-size: 0.9rem;
-    margin-bottom: 16px;
-  }
-
-  .person-name {
-    font-size: 0.95rem;
-  }
-
-  .action-card-btn {
-    padding: 16px;
-    gap: 8px;
-  }
-
-  .admin-actions-section {
-    padding: 16px;
-  }
-}
-
-.font-bold {
-  font-weight: 700;
-}
-
 .btn-success {
   background: #52d244 !important;
   color: white !important;
   border-color: #52d244 !important;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
 }
 
 .btn-success:hover {
   background: #4ab83c !important;
 }
 
-.outline-buttons button {
-  flex-direction: row;
-  height: 40px;
-  padding: 0 16px;
-  border-radius: 20px;
-  font-size: 0.85rem;
+.save-notes-btn {
+  min-width: 140px;
+}
+
+.status-update-controls .btn-success {
+  height: 48px;
+  flex: 0 0 auto;
+  min-width: 160px;
 }
 
 .btn-outline-refund {
   color: #ef4444;
-  border: 1px solid #ef4444;
-  background: transparent;
+  border-color: #ef4444;
 }
 
-.btn-outline-refund:hover { background: #fef2f2; }
+.btn-outline-refund:hover {
+  background: #fef2f2;
+}
 
 .btn-outline-hold {
   color: #eab308;
-  border: 1px solid #eab308;
-  background: transparent;
+  border-color: #eab308;
 }
-.btn-outline-hold:hover { background: #fefce8; }
+
+.btn-outline-hold:hover {
+  background: #fefce8;
+}
 
 .btn-outline-release {
   color: #22c55e;
-  border: 1px solid #22c55e;
-  background: transparent;
+  border-color: #22c55e;
 }
-.btn-outline-release:hover { background: #f0fdf4; }
+
+.btn-outline-release:hover {
+  background: #f0fdf4;
+}
 
 .btn-outline-stop {
   color: #94a3b8;
-  border: 1px solid #94a3b8;
-  background: transparent;
+  border-color: #94a3b8;
 }
-.btn-outline-stop:hover { background: #f8fafc; }
 
-.badge-requested, .badge-in-escrow {
+.btn-outline-stop:hover {
+  background: #f8fafc;
+}
+
+.badge-requested,
+.badge-in-escrow {
   background: #e0f2fe;
   color: #0369a1;
   padding: 4px 12px;
@@ -488,52 +369,92 @@
   gap: 4px;
 }
 
+/* Responsive Design */
 @media (max-width: 1024px) {
+  .booking-detail-card {
+    padding: 24px;
+  }
+
+  .status-update-controls {
+    max-width: 100%;
+  }
+
   .detail-two-col {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
 }
 
 @media (max-width: 768px) {
-  .booking-detail-card, .detail-card, .admin-actions-section {
+
+  .booking-detail-card,
+  .detail-card,
+  .admin-actions-section,
+  .customer-notes-card {
     padding: 20px;
+    margin-bottom: 16px;
   }
 
   .booking-header-row {
     flex-direction: column;
-    gap: 16px;
+    margin-bottom: 20px;
   }
 
   .booking-points-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 16px;
-  }
-
-  .participants-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .payment-actions-grid {
-    grid-template-columns: 1fr 1fr;
   }
 
   .status-update-controls {
     flex-direction: column;
     align-items: stretch;
+    gap: 12px;
   }
 
-  .outline-buttons button {
-    width: 100%;
-    margin-bottom: 8px;
+  .dropdown-with-label {
+    flex: none;
+  }
+
+  .payment-actions-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 480px) {
+
+  .booking-detail-card,
+  .detail-card,
+  .admin-actions-section,
+  .customer-notes-card,
+  .green-bg {
+    padding: 16px;
+  }
+
+  .booking-id-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
   .booking-points-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
-  
+
+  .booking-service-title {
+    font-size: 1.15rem;
+  }
+
   .payment-actions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .participant-box {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .participants-grid {
     grid-template-columns: 1fr;
   }
 }

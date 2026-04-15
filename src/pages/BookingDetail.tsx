@@ -72,10 +72,10 @@ const BookingDetail: React.FC = () => {
 
       <div className="booking-detail-card">
         <div className="booking-header-row">
-          <div style={{ flex: 1 }}>
-            <div className="flex justify-between items-start mb-2">
+          <div className="booking-header-main">
+            <div className="booking-id-row">
               <div className="booking-id">#BK1001</div>
-              <div className="flex gap-2">
+              <div className="booking-badges">
                 <span className={`booking-badge badge-${bookingStatus.toLowerCase().replace(' ', '-')}`}>{bookingStatus}</span>
                 <span className={`payment-badge badge-${paymentStatus.toLowerCase().replace(' ', '-')}`}>{paymentStatus}</span>
               </div>
@@ -103,64 +103,66 @@ const BookingDetail: React.FC = () => {
         <div className="notes-text">Please bring yoga mat</div>
       </div>
 
-      <div className="detail-card mb-4">
-        <div className="card-title">Participants</div>
-        <div className="participants-grid">
-          <div className="participant-box">
-            <div className="person-avatar-box"><User size={20} /></div>
-            <div className="person-info">
-              <div className="text-muted text-xs">Customer</div>
-              <div className="person-name">John Anderson</div>
-              <div className="person-contact">john@email.com</div>
-              <div className="person-contact">+1 234 567 8901</div>
+      <div className="detail-two-col">
+        <div className="detail-card">
+          <div className="card-title">Participants</div>
+          <div className="participants-grid">
+            <div className="participant-box">
+              <div className="person-avatar-box"><User size={20} /></div>
+              <div className="person-info">
+                <div className="text-muted text-xs">Customer</div>
+                <div className="person-name">John Anderson</div>
+                <div className="person-contact">john@email.com</div>
+                <div className="person-contact">+1 234 567 8901</div>
+              </div>
+            </div>
+            <div className="participant-box">
+              <div className="person-avatar-box prof"><User size={20} /></div>
+              <div className="person-info">
+                <div className="text-muted text-xs">Professional</div>
+                <div className="person-name">Sarah Mitchell</div>
+                <div className="person-contact">sarah@email.com</div>
+                <div className="person-contact">+1 234 567 8902</div>
+              </div>
             </div>
           </div>
-          <div className="participant-box">
-            <div className="person-avatar-box prof"><User size={20} /></div>
-            <div className="person-info">
-              <div className="text-muted text-xs">Professional</div>
-              <div className="person-name">Sarah Mitchell</div>
-              <div className="person-contact">sarah@email.com</div>
-              <div className="person-contact">+1 234 567 8902</div>
+        </div>
+
+        <div className="detail-card">
+          <div className="card-title">Payment Breakdown</div>
+          <div className="payment-stack">
+            <div className="payment-row">
+              <span className="text-muted">Service Price</span>
+              <span className="payment-value">€{basePrice.toFixed(2)}</span>
+            </div>
+            <div className="divider-light"></div>
+            <div className="payment-row highlight">
+              <span className="text-muted">Solo Fee (10%)</span>
+              <span className="payment-value">-€{soloFeeAmount.toFixed(2)}</span>
+            </div>
+            <div className="payment-row highlight">
+              <span className="text-muted">Stripe Fee</span>
+              <span className="payment-value">-€{stripeFee.toFixed(2)}</span>
+            </div>
+            <div className="divider-light"></div>
+            <div className="payment-row total text-success">
+              <span className="text-muted">Net to Professional</span>
+              <span className="payment-value font-bold">€{netPayout.toFixed(2)}</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="detail-card mb-4">
-        <div className="card-title" style={{ marginBottom: '16px' }}>Payment Breakdown</div>
-        <div className="payment-stack">
-          <div className="payment-row">
-            <span className="text-muted">Service Price</span>
-            <b>€{basePrice.toFixed(2)}</b>
-          </div>
-          <div className="divider-light" style={{ margin: '8px 0' }}></div>
-          <div className="payment-row highlight">
-            <span className="text-muted">Solo Fee (10%)</span>
-            <span>-€{soloFeeAmount.toFixed(2)}</span>
-          </div>
-          <div className="payment-row highlight">
-            <span className="text-muted">Stripe Fee</span>
-            <span>-€{stripeFee.toFixed(2)}</span>
-          </div>
-          <div className="divider-light" style={{ margin: '8px 0' }}></div>
-          <div className="payment-row text-success">
-            <span className="text-muted">Net to Professional</span>
-            <span className="font-bold">€{netPayout.toFixed(2)}</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="detail-card full-width mb-4">
+      <div className="detail-card full-width mb-6">
         <div className="card-title">Admin Notes</div>
         <textarea 
           className="notes-textarea" 
-          placeholder="Add internal notes about this user..."
+          placeholder="Add internal notes about this booking..."
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
         ></textarea>
         <div className="flex justify-end mt-4">
-          <button className="btn btn-primary btn-success" style={{ padding: '0 32px' }} onClick={() => openConfirmation('Save Notes', 'Administrative notes updated successfully.', 'success', () => setIsModalOpen(false))}>Save Notes</button>
+          <button className="btn btn-primary btn-success save-notes-btn" onClick={() => openConfirmation('Save Notes', 'Administrative notes updated successfully.', 'success', () => setIsModalOpen(false))}>Save Notes</button>
         </div>
       </div>
 
@@ -168,23 +170,23 @@ const BookingDetail: React.FC = () => {
         <div className="management-section">
           <div>
             <span className="action-group-title">Booking Lifecycle Management</span>
-              <div className="flex gap-4 items-end mb-6">
-                <div className="dropdown-with-label flex-1">
-                  <label className="text-black font-semibold text-xs mb-2 block">Update Booking Status <span className="text-red-500">*</span></label>
-                  <select className="form-input" value={bookingStatus} onChange={(e) => setBookingStatus(e.target.value)}>
-                    <option>Requested</option>
-                    <option>Accepted</option>
-                    <option>In Progress</option>
-                    <option>Completed</option>
-                    <option>Cancelled</option>
-                    <option>Declined</option>
-                    <option>In Dispute</option>
-                    <option>No Show-Customer</option>
-                    <option>No Show-Professional</option>
-                  </select>
-                </div>
-                <button className="btn btn-primary btn-success flex-1 h-10" onClick={handleStatusUpdate}>Update Status</button>
+            <div className="status-update-controls">
+              <div className="dropdown-with-label">
+                <label>Update Booking Status <span>*</span></label>
+                <select className="form-input" value={bookingStatus} onChange={(e) => setBookingStatus(e.target.value)}>
+                  <option>Requested</option>
+                  <option>Accepted</option>
+                  <option>In Progress</option>
+                  <option>Completed</option>
+                  <option>Cancelled</option>
+                  <option>Declined</option>
+                  <option>In Dispute</option>
+                  <option>No Show-Customer</option>
+                  <option>No Show-Professional</option>
+                </select>
               </div>
+              <button className="btn btn-primary btn-success" onClick={handleStatusUpdate}>Update Status</button>
+            </div>
           </div>
 
           <div className="divider-light" style={{ margin: '8px 0' }}></div>
