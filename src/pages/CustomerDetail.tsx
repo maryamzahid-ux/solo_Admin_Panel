@@ -58,7 +58,7 @@ const CustomerDetail: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="customer-detail-page">
       <div className="detail-header">
         <button className="back-btn" onClick={() => navigate(-1)}>
           <ArrowLeft size={18} />
@@ -75,10 +75,12 @@ const CustomerDetail: React.FC = () => {
               <div className="user-role role-customer">Customer</div>
             </div>
           </div>
-          <span className={`badge ${status.toLowerCase()}`}>{status}</span>
+          <div className="profile-status">
+            <span className={`badge ${status.toLowerCase()}`}>{status}</span>
+          </div>
         </div>
 
-        <div className="info-grid" style={{ marginBottom: 0 }}>
+        <div className="info-grid">
           <div className="info-item">
             <Mail size={18} className="info-icon" /> john.anderson@email.com
           </div>
@@ -94,47 +96,45 @@ const CustomerDetail: React.FC = () => {
         </div>
       </div>
 
-      <div className="split-section" style={{ gridTemplateColumns: '1fr' }}>
-        <div className="side-cards" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-          <div className="side-card">
-            <div className="side-card-title">Services Chosen (Interests)</div>
-            <div className="service-tags">
-              <span className="service-tag">Personal Training</span>
-              <span className="service-tag">Physiotherapy</span>
-              <span className="service-tag">Yoga</span>
-              <span className="service-tag">Nutritionist</span>
-            </div>
+      <div className="split-section">
+        <div className="side-card">
+          <div className="side-card-title">Services Chosen (Interests)</div>
+          <div className="service-tags">
+            <span className="service-tag">Personal Training</span>
+            <span className="service-tag">Physiotherapy</span>
+            <span className="service-tag">Yoga</span>
+            <span className="service-tag">Nutritionist</span>
           </div>
-          
-          <div className="side-card">
-            <div className="side-card-title">Services Availed (History)</div>
-            <div className="flex flex-col gap-4">
-              <div className="flex justify-between items-center py-2 border-bottom">
-                <div>
-                  <div className="font-semibold text-sm">Personal Training</div>
-                  <div className="text-muted text-xs">Professional: Sarah Mitchell</div>
-                </div>
-                <div className="text-right text-xs">
-                  <div className="font-bold">April 05, 2025</div>
-                  <div style={{ color: 'var(--primary)' }}>Completed</div>
-                </div>
+        </div>
+        
+        <div className="side-card">
+          <div className="side-card-title">Services Availed (History)</div>
+          <div className="flex flex-col gap-4">
+            <div className="flex justify-between items-center py-2 border-bottom">
+              <div>
+                <div className="font-semibold text-sm">Personal Training</div>
+                <div className="text-muted text-xs">Professional: Sarah Mitchell</div>
               </div>
-              <div className="flex justify-between items-center py-2 border-bottom">
-                <div>
-                  <div className="font-semibold text-sm">Yoga Session</div>
-                  <div className="text-muted text-xs">Professional: Lisa Rodriguez</div>
-                </div>
-                <div className="text-right text-xs">
-                  <div className="font-bold">March 28, 2025</div>
-                  <div style={{ color: 'var(--primary)' }}>Completed</div>
-                </div>
+              <div className="text-right text-xs">
+                <div className="font-bold">April 05, 2025</div>
+                <div style={{ color: 'var(--primary)' }}>Completed</div>
+              </div>
+            </div>
+            <div className="flex justify-between items-center py-2 border-bottom">
+              <div>
+                <div className="font-semibold text-sm">Yoga Session</div>
+                <div className="text-muted text-xs">Professional: Lisa Rodriguez</div>
+              </div>
+              <div className="text-right text-xs">
+                <div className="font-bold">March 28, 2025</div>
+                <div style={{ color: 'var(--primary)' }}>Completed</div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="actions-section" style={{ marginTop: 24 }}>
+      <div className="actions-section">
         <div className="actions-title">Account Actions</div>
         <div className="actions-row">
           <button className="btn btn-outline btn-outline-warning" onClick={handleDeactivate}>Deactivate Account</button>
@@ -157,3 +157,4 @@ const CustomerDetail: React.FC = () => {
 };
 
 export default CustomerDetail;
+

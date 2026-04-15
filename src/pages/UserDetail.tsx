@@ -109,7 +109,9 @@ const UserDetail: React.FC = () => {
               <div className="profile-role">Professional</div>
             </div>
           </div>
-          <span className={`badge ${status.toLowerCase()}`}>{status}</span>
+          <div className="profile-status">
+            <span className={`badge ${status.toLowerCase()}`}>{status}</span>
+          </div>
         </div>
 
         <div className="info-grid">

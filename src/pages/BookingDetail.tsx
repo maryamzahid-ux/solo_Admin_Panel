@@ -161,8 +161,8 @@ const BookingDetail: React.FC = () => {
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
         ></textarea>
-        <div className="flex justify-end mt-4">
-          <button className="btn btn-primary btn-success save-notes-btn" onClick={() => openConfirmation('Save Notes', 'Administrative notes updated successfully.', 'success', () => setIsModalOpen(false))}>Save Notes</button>
+        <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+          <button className="btn btn-primary" onClick={() => openConfirmation('Save Notes', 'Administrative notes updated successfully.', 'success', () => setIsModalOpen(false))}>Save Notes</button>
         </div>
       </div>
 
