@@ -299,6 +299,132 @@
   color: #16a34a !important;
 }
 
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .booking-detail-card {
+    padding: 24px;
+  }
+
+  .booking-points-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .detail-two-col {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .payment-actions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .admin-actions-section {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .booking-detail-card {
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  .booking-header-row {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .booking-points-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .detail-two-col {
+    margin-bottom: 16px;
+  }
+
+  .detail-card {
+    padding: 20px;
+  }
+
+  .person-row {
+    gap: 12px;
+  }
+
+  .person-avatar-box {
+    width: 40px;
+    height: 40px;
+  }
+
+  .status-update-controls {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .dropdown-with-label {
+    flex: none;
+  }
+
+  .btn-lg {
+    height: 44px;
+    padding: 0 24px;
+  }
+
+  .payment-actions-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .action-card-btn {
+    padding: 20px;
+  }
+
+  .participants-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-actions-section {
+    padding: 20px;
+    margin-top: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .booking-detail-card {
+    padding: 16px;
+  }
+
+  .detail-card {
+    padding: 16px;
+  }
+
+  .booking-service-title {
+    font-size: 1.1rem;
+  }
+
+  .card-title {
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+  }
+
+  .person-name {
+    font-size: 0.95rem;
+  }
+
+  .action-card-btn {
+    padding: 16px;
+    gap: 8px;
+  }
+
+  .admin-actions-section {
+    padding: 16px;
+  }
+}
+
 .font-bold {
   font-weight: 700;
 }

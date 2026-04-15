@@ -293,3 +293,123 @@
 .actions-row .btn {
   flex: 1;
 }
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .detail-main-card {
+    padding: 24px;
+  }
+
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .split-section {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .profile-top {
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .detail-main-card {
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  .profile-info {
+    gap: 16px;
+  }
+
+  .profile-avatar {
+    width: 60px;
+    height: 60px;
+  }
+
+  .profile-name {
+    font-size: 1.1rem;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .metric-card {
+    padding: 20px;
+  }
+
+  .metric-value {
+    font-size: 1.25rem;
+  }
+
+  .video-card, .side-card {
+    padding: 20px;
+  }
+
+  .split-section {
+    margin-bottom: 16px;
+  }
+
+  .docs-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .documents-section {
+    margin-bottom: 16px;
+  }
+
+  .notes-section {
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  .actions-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .actions-row .btn {
+    width: 100%;
+  }
+
+  .actions-section {
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .detail-main-card, .video-card, .side-card, .notes-section {
+    padding: 16px;
+  }
+
+  .profile-info {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .profile-name {
+    justify-content: center;
+  }
+
+  .metric-card {
+    padding: 16px;
+  }
+
+  .metric-value {
+    font-size: 1.1rem;
+  }
+}

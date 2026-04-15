@@ -233,3 +233,84 @@
 .modal-btn-confirm.warning { background: #d1b12b; }
 
 .modal-btn-confirm:hover { filter: brightness(0.9); }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modal-content {
+    padding: 32px 24px;
+    max-width: 90vw;
+  }
+
+  .modal-pulse-circle {
+    width: 80px;
+    height: 80px;
+  }
+
+  .modal-pulse-circle::before {
+    width: 60px;
+    height: 60px;
+  }
+
+  .modal-pulse-inner {
+    width: 42px;
+    height: 42px;
+  }
+
+  .modal-title {
+    font-size: 1.25rem;
+  }
+
+  .modal-description {
+    font-size: 0.95rem;
+  }
+
+  .modal-actions {
+    gap: 12px;
+  }
+
+  .modal-btn {
+    height: 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-overlay {
+    padding: 16px;
+  }
+
+  .modal-content {
+    padding: 24px 16px;
+    border-radius: 16px;
+  }
+
+  .modal-pulse-circle {
+    width: 70px;
+    height: 70px;
+  }
+
+  .modal-pulse-circle::before {
+    width: 52px;
+    height: 52px;
+  }
+
+  .modal-pulse-inner {
+    width: 36px;
+    height: 36px;
+  }
+
+  .modal-title {
+    font-size: 1.1rem;
+  }
+
+  .modal-description {
+    font-size: 0.9rem;
+  }
+
+  .modal-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-btn {
+    height: 44px;
+  }
+}

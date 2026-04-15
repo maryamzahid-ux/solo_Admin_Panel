@@ -111,3 +111,27 @@
     flex-wrap: wrap;
   }
 }
+
+@media (max-width: 480px) {
+  .audit-log-item {
+    padding: 12px 16px;
+  }
+
+  .audit-icon-box {
+    width: 36px;
+    height: 36px;
+  }
+
+  .log-action-title {
+    font-size: 0.9rem;
+  }
+
+  .log-action-desc {
+    font-size: 0.8rem;
+  }
+
+  .audit-meta {
+    gap: 6px;
+    font-size: 0.75rem;
+  }
+}

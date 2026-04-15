@@ -117,3 +117,22 @@
     gap: 12px;
   }
 }
+
+@media (max-width: 480px) {
+  .booking-card {
+    padding: 16px;
+  }
+
+  .booking-service {
+    font-size: 1rem;
+  }
+
+  .booking-people {
+    margin-bottom: 16px;
+  }
+
+  .booking-meta {
+    gap: 8px;
+    font-size: 0.8rem;
+  }
+}

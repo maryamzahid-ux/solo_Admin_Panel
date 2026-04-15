@@ -161,3 +161,85 @@
   justify-content: center;
   gap: 12px;
 }
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .job-status-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .charts-row {
+    grid-template-columns: 1fr;
+  }
+
+  .revenue-amount {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-header {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    padding: 20px;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+
+  .job-status-grid {
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .mini-card {
+    padding: 16px;
+  }
+
+  .charts-row {
+    gap: 16px;
+  }
+
+  .chart-card {
+    padding: 20px;
+  }
+
+  .revenue-card {
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  .revenue-amount {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .stat-value {
+    font-size: 1.25rem;
+  }
+
+  .revenue-amount {
+    font-size: 1.75rem;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .chart-card, .revenue-card {
+    padding: 16px;
+  }
+}
