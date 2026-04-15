@@ -1,15 +1,23 @@
-import React from 'react';
-import { Bell } from 'lucide-react';
+import { Bell, Menu } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  onMenuClick?: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
   const location = useLocation();
   const isDashboard = location.pathname.includes('dashboard');
 
   return (
     <header className="header">
-      <div className="header-title">
-        {isDashboard ? 'Admin Dashboard' : ''}
+      <div className="flex items-center gap-4">
+        <button className="mobile-menu-btn" onClick={onMenuClick}>
+          <Menu size={20} />
+        </button>
+        <div className="header-title">
+          {isDashboard ? 'Admin Dashboard' : ''}
+        </div>
       </div>
       <div className="header-actions">
         <Bell className="header-bell" size={20} />

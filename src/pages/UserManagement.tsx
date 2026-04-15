@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Search, Calendar, Briefcase, CheckCircle2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Search, Calendar, Briefcase, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import './UserManagement.css';
 
 const initialUsers = [
@@ -14,15 +14,14 @@ const initialUsers = [
 ];
 
 const UserManagement: React.FC = () => {
+  const navigate = useNavigate();
   const [statusFilter, setStatusFilter] = useState('All');
   const [typeFilter, setTypeFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [visibleCount, setVisibleCount] = useState(4);
 
   const handleViewAll = () => {
-    console.log('Resetting all filters');
-    setStatusFilter('All');
-    setTypeFilter('All');
-    setSearchQuery('');
+    setVisibleCount(prev => prev + 4);
   };
 
   const filteredUsers = initialUsers.filter(user => {
@@ -40,7 +39,12 @@ const UserManagement: React.FC = () => {
   return (
     <div>
       <div className="page-header">
-        <h1 className="page-title">User Management</h1>
+        <div className="flex items-center gap-4">
+          <button className="back-btn" onClick={() => navigate(-1)}>
+            <ArrowLeft size={18} />
+          </button>
+          <h1 className="page-title">User Management</h1>
+        </div>
         <div className="filters-row">
           <select 
             className="form-input" 
@@ -92,20 +96,12 @@ const UserManagement: React.FC = () => {
 
       <div className="flex justify-between items-center" style={{marginBottom: 20}}>
         <div style={{fontSize: '0.9rem', color: 'var(--text-muted)', fontWeight: 500}}>
-          Showing {filteredUsers.length} of {initialUsers.length} total members
+          {filteredUsers.length} users found
         </div>
-        <button 
-          type="button"
-          className="btn btn-outline"
-          onClick={handleViewAll}
-          style={{ padding: '8px 20px', fontSize: '0.85rem' }}
-        >
-          View All Members
-        </button>
       </div>
 
       <div className="user-grid">
-        {filteredUsers.map(user => (
+        {filteredUsers.slice(0, visibleCount).map(user => (
           <Link to={user.role === 'Customer' ? `/customers/${user.id}` : `/users/${user.id}`} key={user.id} className="user-card">
             <div className="user-status">
               <span className={`badge ${user.status.toLowerCase().replace(' ', '-')}`}>{user.status}</span>
@@ -136,6 +132,19 @@ const UserManagement: React.FC = () => {
           </Link>
         ))}
       </div>
+
+      {filteredUsers.length > visibleCount && (
+        <div style={{ textAlign: 'center', marginTop: 32 }}>
+          <button 
+            type="button"
+            className="text-muted text-sm font-medium" 
+            style={{background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline'}}
+            onClick={handleViewAll}
+          >
+            View All Members
+          </button>
+        </div>
+      )}
       <div style={{height: 40}}></div>
     </div>
   );

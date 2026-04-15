@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Calendar, Clock, DollarSign, MapPin, User, Briefcase, Wallet, RefreshCcw, Pause, Play, Ban, Edit2, Save } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, DollarSign, MapPin, User, Briefcase, Wallet, RefreshCcw, Pause, Play, Ban, Edit2, Save, XCircle } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Modal from '../components/Modal';
 import './BookingDetail.css';
@@ -26,21 +26,38 @@ const BookingDetail: React.FC = () => {
   const [modalType, setModalType] = useState<'success' | 'warning' | 'danger'>('success');
   const [modalTitle, setModalTitle] = useState('');
   const [modalDescription, setModalDescription] = useState('');
+  const [modalIcon, setModalIcon] = useState<React.ReactNode>(null);
+  const [disputeReason, setDisputeReason] = useState('');
   const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
 
-  const openConfirmation = (title: string, desc: string, type: 'success' | 'warning' | 'danger', action: () => void) => {
+  const openConfirmation = (title: string, desc: string, type: 'success' | 'warning' | 'danger' | 'info', action: () => void, icon?: React.ReactNode) => {
     setModalTitle(title);
     setModalDescription(desc);
     setModalType(type);
+    setModalIcon(icon || null);
     setPendingAction(() => action);
     setIsModalOpen(true);
   };
 
-  const handleAction = (newPaymentStatus: string, title: string, desc: string, type: 'success' | 'warning' | 'danger') => {
+  const handleAction = (newPaymentStatus: string, title: string, desc: string, type: 'success' | 'warning' | 'danger' | 'info', icon?: React.ReactNode) => {
     openConfirmation(title, desc, type, () => {
       setPaymentStatus(newPaymentStatus);
       setIsModalOpen(false);
-    });
+    }, icon);
+  };
+
+  const handleStatusUpdate = () => {
+    if (bookingStatus === 'In Dispute') {
+      openConfirmation(
+        'Mark as In Dispute',
+        'Please provide a reason for marking this service as in dispute. This will pause the payout and restrict actions for both customer and professional.',
+        'danger',
+        () => setIsModalOpen(false),
+        <XCircle size={24} />
+      );
+    } else {
+      openConfirmation('Update Status', 'Record status updated successfully.', 'success', () => setIsModalOpen(false));
+    }
   };
 
   return (
@@ -56,16 +73,16 @@ const BookingDetail: React.FC = () => {
 
       <div className="booking-detail-card">
         <div className="booking-header-row">
-          <div>
-            <div className="booking-id">#{id || 'BK1003'}</div>
+          <div style={{ flex: 1 }}>
+            <div className="flex justify-between items-start mb-2">
+              <div className="booking-id">#BK1001</div>
+              <div className="flex gap-2">
+                <span className={`booking-badge badge-requested`}>Requested</span>
+                <span className={`payment-badge badge-in-escrow`}>In Escrow</span>
+              </div>
+            </div>
             <div className="booking-service-title">Personal Training Session</div>
-            <div className="booking-service-desc">High-intensity functional training</div>
-          </div>
-          <div className="flex gap-3">
-            <span className={`booking-badge badge-${bookingStatus.toLowerCase().replace(' ', '-')}`}>{bookingStatus}</span>
-            <span className={`payment-badge badge-${paymentStatus.toLowerCase().replace(' ', '-')}`}>
-              <Wallet size={12} /> {paymentStatus}
-            </span>
+            <div className="booking-service-desc">1-on-1 training session focusing on strength and cardio</div>
           </div>
         </div>
 
@@ -76,105 +93,75 @@ const BookingDetail: React.FC = () => {
           <div className="point-item"><MapPin size={16} /> Location: <span>Customer Site</span></div>
         </div>
 
-        <div className="divider-light" style={{ margin: '24px 0' }}></div>
-
-        <div className="address-section">
-          <div className="text-muted text-xs font-bold uppercase tracking-wider mb-2">Service Address</div>
-          <div className="font-medium">123 Main St, Dublin, Ireland.</div>
-        </div>
+      <div className="address-section green-bg mt-4">
+        <div className="address-label">Address</div>
+        <div className="address-text">123 Main St, Dublin, Ireland.</div>
+      </div>
       </div>
 
-      <div className="detail-two-col">
-        <div className="detail-card main-col">
-          <div className="card-title">Participants</div>
-          <div className="participants-stack">
-            <div className="person-row">
-              <div className="person-avatar-box"><User size={20} /></div>
-              <div className="person-info">
-                <div className="text-muted text-xs font-bold">Customer</div>
-                <div className="person-name">John Anderson</div>
-                <div className="person-contact">john@email.com</div>
-              </div>
-            </div>
-            <div className="notif-divider" style={{ margin: '16px 0' }}></div>
-            <div className="person-row">
-              <div className="person-avatar-box prof"><Briefcase size={20} /></div>
-              <div className="person-info">
-                <div className="text-muted text-xs font-bold">Professional</div>
-                <div className="person-name">Sarah Mitchell</div>
-                <div className="person-contact">sarah@email.com</div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="customer-notes-card mt-0 mb-4">
+        <div className="notes-label">Customer Notes:</div>
+        <div className="notes-text">Please bring yoga mat</div>
+      </div>
 
-        <div className="detail-card side-col">
-          <div className="flex justify-between items-center mb-5">
-            <div className="card-title" style={{ marginBottom: 0 }}>Payment Breakdown</div>
-            <button 
-              className="text-primary flex items-center gap-1 text-xs font-bold"
-              style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-              onClick={() => setIsEditingFees(!isEditingFees)}
-            >
-              {isEditingFees ? <><Save size={14} /> Finish</> : <><Edit2 size={14} /> Edit Fees</>}
-            </button>
+      <div className="detail-card mb-4">
+        <div className="card-title">Participants</div>
+        <div className="participants-grid">
+          <div className="participant-box">
+            <div className="person-avatar-box"><User size={20} /></div>
+            <div className="person-info">
+              <div className="text-muted text-xs">Customer</div>
+              <div className="person-name">John Anderson</div>
+              <div className="person-contact">john@email.com</div>
+              <div className="person-contact">+1 234 567 8901</div>
+            </div>
           </div>
-          
-          <div className="payment-stack">
-            <div className="payment-row">
-              <span>Base Service Fee</span>
-              {isEditingFees ? (
-                <div className="edit-input-wrapper">
-                  <span>€</span>
-                  <input 
-                    type="number" 
-                    value={basePrice} 
-                    onChange={(e) => setBasePrice(Number(e.target.value))}
-                    className="small-edit-input"
-                  />
-                </div>
-              ) : (
-                <b>€{basePrice.toFixed(2)}</b>
-              )}
-            </div>
-            <div className="payment-row highlight">
-              <span>Solo Platform Fee ({soloFeePercent}%)</span>
-              {isEditingFees ? (
-                <div className="edit-input-wrapper">
-                  <input 
-                    type="number" 
-                    value={soloFeePercent} 
-                    onChange={(e) => setSoloFeePercent(Number(e.target.value))}
-                    className="small-edit-input"
-                  />
-                  <span>%</span>
-                </div>
-              ) : (
-                <span>-€{soloFeeAmount.toFixed(2)}</span>
-              )}
-            </div>
-            <div className="payment-row highlight">
-              <span>Payment Processing</span>
-              <span>-€{stripeFee.toFixed(2)}</span>
-            </div>
-            <div className="notif-divider" style={{ margin: '12px 0 16px' }}></div>
-            <div className="payment-row payout">
-              <span>Professional Payout</span>
-              <span className="payout-amount">€{netPayout.toFixed(2)}</span>
+          <div className="participant-box">
+            <div className="person-avatar-box prof"><User size={20} /></div>
+            <div className="person-info">
+              <div className="text-muted text-xs">Professional</div>
+              <div className="person-name">Sarah Mitchell</div>
+              <div className="person-contact">sarah@email.com</div>
+              <div className="person-contact">+1 234 567 8902</div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="detail-card full-width">
-        <div className="card-title">Internal Admin Notes</div>
+      <div className="detail-card mb-4">
+        <div className="card-title" style={{ marginBottom: '16px' }}>Payment Breakdown</div>
+        <div className="payment-stack">
+          <div className="payment-row">
+            <span className="text-muted">Service Price</span>
+            <b>€{basePrice.toFixed(2)}</b>
+          </div>
+          <div className="divider-light" style={{ margin: '8px 0' }}></div>
+          <div className="payment-row highlight">
+            <span className="text-muted">Solo Fee (10%)</span>
+            <span>-€{soloFeeAmount.toFixed(2)}</span>
+          </div>
+          <div className="payment-row highlight">
+            <span className="text-muted">Stripe Fee</span>
+            <span>-€{stripeFee.toFixed(2)}</span>
+          </div>
+          <div className="divider-light" style={{ margin: '8px 0' }}></div>
+          <div className="payment-row text-success">
+            <span className="text-muted">Net to Professional</span>
+            <span className="font-bold">€{netPayout.toFixed(2)}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="detail-card full-width mb-4">
+        <div className="card-title">Admin Notes</div>
         <textarea 
           className="notes-textarea" 
+          placeholder="Add internal notes about this user..."
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
         ></textarea>
         <div className="flex justify-end mt-4">
-          <button className="btn btn-primary" style={{ padding: '0 32px' }} onClick={() => openConfirmation('Save Notes', 'Administrative notes updated successfully.', 'success', () => setIsModalOpen(false))}>Save Notes</button>
+          <button className="btn btn-primary btn-success" style={{ padding: '0 32px' }} onClick={() => openConfirmation('Save Notes', 'Administrative notes updated successfully.', 'success', () => setIsModalOpen(false))}>Save Notes</button>
         </div>
       </div>
 
@@ -182,43 +169,44 @@ const BookingDetail: React.FC = () => {
         <div className="management-section">
           <div>
             <span className="action-group-title">Booking Lifecycle Management</span>
-            <div className="status-update-controls">
-              <div className="dropdown-with-label">
-                <label>Overall Status</label>
-                <select className="form-input" value={bookingStatus} onChange={(e) => setBookingStatus(e.target.value)}>
-                  <option>Requested</option>
-                  <option>Accepted</option>
-                  <option>In Progress</option>
-                  <option>Completed</option>
-                  <option>Cancelled</option>
-                  <option>Declined</option>
-                  <option>In Dispute</option>
-                  <option>No Show</option>
-                </select>
+              <div className="flex gap-4 items-end mb-6">
+                <div className="dropdown-with-label flex-1">
+                  <label className="text-black font-semibold text-xs mb-2 block">Update Booking Status <span className="text-red-500">*</span></label>
+                  <select className="form-input" value={bookingStatus} onChange={(e) => setBookingStatus(e.target.value)}>
+                    <option>Requested</option>
+                    <option>Accepted</option>
+                    <option>In Progress</option>
+                    <option>Completed</option>
+                    <option>Cancelled</option>
+                    <option>Declined</option>
+                    <option>In Dispute</option>
+                    <option>No Show-Customer</option>
+                    <option>No Show-Professional</option>
+                  </select>
+                </div>
+                <button className="btn btn-primary btn-success flex-1 h-10" onClick={handleStatusUpdate}>Update Status</button>
               </div>
-              <button className="btn btn-primary btn-lg" onClick={() => openConfirmation('Update Status', 'Record status updated.', 'success', () => setIsModalOpen(false))}>Update Status</button>
-            </div>
           </div>
 
           <div className="divider-light" style={{ margin: '8px 0' }}></div>
 
           <div>
-            <span className="action-group-title">Financial & Escrow Controls</span>
-            <div className="payment-actions-grid">
-              <button className="action-card-btn btn-refund" onClick={() => handleAction('Refunded', 'Initiate Refund', 'Processing customer refund...', 'danger')}>
-                <RefreshCcw size={20} />
+            <span className="card-title text-sm block mb-4">Financial & Escrow Controls</span>
+            <div className="payment-actions-grid outline-buttons">
+              <button className="action-card-btn btn-outline-refund" onClick={() => handleAction('Refunded', 'Initiate Refund', 'Processing customer refund...', 'danger', <RefreshCcw size={24} />)}>
+                <RefreshCcw size={16} />
                 <span>Initiate Refund</span>
               </button>
-              <button className="action-card-btn btn-hold" onClick={() => handleAction('On Hold', 'Hold Payout', 'Payout placed on hold.', 'warning')}>
-                <Pause size={20} />
+              <button className="action-card-btn btn-outline-hold" onClick={() => handleAction('On Hold', 'Hold Payout', 'Payout placed on hold.', 'warning', <Pause size={24} />)}>
+                <Pause size={16} style={{transform: 'rotate(90deg)'}} />
                 <span>Hold Payout</span>
               </button>
-              <button className="action-card-btn btn-release" onClick={() => handleAction('Paid Out', 'Release Payout', 'Releasing funds to professional...', 'success')}>
-                <Play size={20} />
+              <button className="action-card-btn btn-outline-release" onClick={() => handleAction('Paid Out', 'Release Payout', 'Releasing funds to professional...', 'success', <Play size={24} />)}>
+                <Play size={16} />
                 <span>Release Payout</span>
               </button>
-              <button className="action-card-btn btn-stop" onClick={() => handleAction('In Escrow', 'Stop Refund', 'Refund process halted.', 'warning')}>
-                <Ban size={20} />
+              <button className="action-card-btn btn-outline-stop" onClick={() => handleAction('In Escrow', 'Stop Refund', 'Refund process halted.', 'warning', <RotateCcw size={24} />)}>
+                <Ban size={16} />
                 <span>Stop Refund</span>
               </button>
             </div>
@@ -234,7 +222,20 @@ const BookingDetail: React.FC = () => {
         description={modalDescription}
         confirmText="Confirm"
         type={modalType}
-      />
+        icon={modalIcon}
+      >
+        {modalTitle === 'Mark as In Dispute' && (
+          <div>
+            <label className="modal-label">Reason</label>
+            <textarea 
+              className="modal-textarea" 
+              placeholder="Enter dispute reason (e.g., service quality issue, payment concern, no-show conflict)"
+              value={disputeReason}
+              onChange={(e) => setDisputeReason(e.target.value)}
+            />
+          </div>
+        )}
+      </Modal>
       <div style={{height: 60}}></div>
     </div>
   );

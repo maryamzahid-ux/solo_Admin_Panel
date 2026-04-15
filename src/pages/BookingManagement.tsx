@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Search, Calendar, Clock, DollarSign, Wallet } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Search, Calendar, Clock, DollarSign, Wallet, ArrowLeft } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import Loader from '../components/Loader';
 import './BookingManagement.css';
 
 const initialBookings = [
@@ -11,13 +12,21 @@ const initialBookings = [
   { id: 'BK1005', service: 'Personal Training Session', customer: 'John Anderson', professional: 'Sarah Mitchell', date: 'April 05', time: '10:00 AM', price: 120, status: 'In Dispute', payment: 'On Hold' },
   { id: 'BK1006', service: 'Personal Training Session', customer: 'John Anderson', professional: 'Sarah Mitchell', date: 'April 05', time: '10:00 AM', price: 120, status: 'Declined', payment: 'Refunded' },
   { id: 'BK1007', service: 'Personal Training Session', customer: 'John Anderson', professional: 'Sarah Mitchell', date: 'April 05', time: '10:00 AM', price: 120, status: 'Completed', payment: 'In Escrow' },
-  { id: 'BK1008', service: 'Personal Training Session', customer: 'John Anderson', professional: 'Sarah Mitchell', date: 'April 05', time: '10:00 AM', price: 120, status: 'No Show', payment: 'Refunded' },
+  { id: 'BK1008', service: 'Personal Training Session', customer: 'John Anderson', professional: 'Sarah Mitchell', date: 'April 05', time: '10:00 AM', price: 120, status: 'No Show-Customer', payment: 'Refunded' },
 ];
 
 const BookingManagement: React.FC = () => {
+  const navigate = useNavigate();
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [paymentFilter, setPaymentFilter] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
+  const [visibleCount, setVisibleCount] = useState(4);
+  const [isLoading, setIsLoading] = useState(true);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const filteredBookings = initialBookings.filter(b => {
     const matchesStatus = statusFilter === 'ALL' || b.status === statusFilter;
@@ -33,16 +42,19 @@ const BookingManagement: React.FC = () => {
   const handleViewAll = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log('View All Clicked'); // For debugging in browser console
-    setStatusFilter('ALL');
-    setPaymentFilter('ALL');
-    setSearchQuery('');
+    setVisibleCount(prev => prev + 4);
   };
 
   return (
     <div>
+      {isLoading && <Loader fullScreen={true} />}
       <div className="page-header">
-        <h1 className="page-title">Booking Management</h1>
+        <div className="flex items-center gap-4">
+          <button className="back-btn" onClick={() => navigate(-1)}>
+            <ArrowLeft size={18} />
+          </button>
+          <h1 className="page-title">Booking Management</h1>
+        </div>
         <div className="filters-row">
           <select 
             className="form-input" 
@@ -58,7 +70,8 @@ const BookingManagement: React.FC = () => {
             <option value="Cancelled">Cancelled</option>
             <option value="Declined">Declined</option>
             <option value="In Dispute">In Dispute</option>
-            <option value="No Show">No Show</option>
+            <option value="No Show-Customer">No Show-Customer</option>
+            <option value="No Show-Professional">No Show-Professional</option>
           </select>
           <select 
             className="form-input" 
@@ -102,25 +115,10 @@ const BookingManagement: React.FC = () => {
 
       <div className="flex justify-between items-center" style={{marginBottom: 16}}>
         <div style={{fontSize: '0.9rem', color: 'var(--text-muted)'}}>{filteredBookings.length} bookings found</div>
-        <button 
-          type="button"
-          onClick={handleViewAll}
-          style={{ 
-            background: 'none', 
-            border: 'none', 
-            color: 'var(--primary)', 
-            fontWeight: 700, 
-            cursor: 'pointer',
-            fontSize: '0.9rem',
-            textDecoration: 'underline'
-          }}
-        >
-          View All Bookings
-        </button>
       </div>
 
       <div className="booking-grid">
-        {filteredBookings.map(booking => (
+        {filteredBookings.slice(0, visibleCount).map(booking => (
           <Link to={`/bookings/${booking.id}`} key={booking.id} className="booking-card">
             <div className="booking-status-tags">
               <div className={`booking-badge badge-${booking.status.toLowerCase().replace(' ', '-')}`}>
@@ -152,7 +150,7 @@ const BookingManagement: React.FC = () => {
         </div>
       )}
 
-      {filteredBookings.length > 0 && (
+      {filteredBookings.length > visibleCount && (
         <div style={{ textAlign: 'center', marginTop: 32 }}>
           <button 
             type="button"

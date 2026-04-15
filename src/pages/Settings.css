@@ -1,9 +1,15 @@
+.settings-list-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
 .settings-card {
   background: white;
   border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 32px;
-  margin-bottom: 24px;
+  border-radius: 8px;
+  padding: 24px;
 }
 
 .settings-section-header {
@@ -13,24 +19,26 @@
 }
 
 .settings-icon-box {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   background: #f0fdf4;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--primary);
+  color: #22c55e;
   flex-shrink: 0;
 }
 
 .settings-title-info h3 {
   font-size: 1rem;
   font-weight: 700;
+  margin-bottom: 2px;
 }
+
 .settings-title-info p {
   font-size: 0.85rem;
-  color: var(--text-muted);
+  color: #6a6a6a;
 }
 
 .settings-input-group {
@@ -38,50 +46,137 @@
 }
 
 .settings-label {
+  display: block;
   font-size: 0.85rem;
   font-weight: 700;
-  margin-bottom: 12px;
-  display: block;
+  margin-bottom: 8px;
+  color: #1a1a1a;
 }
 
 .settings-input {
-  width: 100%;
-  max-width: 400px;
-  padding: 12px 16px;
+  width: 180px;
+  height: 40px;
   border: 1px solid var(--border-color);
-  border-radius: 8px;
-  font-size: 0.95rem;
+  border-radius: 6px;
+  padding: 0 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a1a1a;
   outline: none;
 }
+
 .settings-input:focus {
-  border-color: var(--primary);
+  border-color: #52d244;
 }
 
 .settings-help {
   font-size: 0.75rem;
-  color: var(--text-muted);
-  margin-top: 8px;
+  color: #9a9a9a;
+  margin-top: 6px;
 }
 
-.toggle-row {
+.refund-options-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.refund-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.refund-option.active {
+  background: white;
+  border-color: var(--border-color);
+}
+
+.radio-btn {
+  width: 18px;
+  height: 18px;
+  border: 1px solid #d1d5db;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.refund-option.active .radio-btn {
+  border-color: #52d244;
+}
+
+.radio-inner {
+  width: 10px;
+  height: 10px;
+  background: #52d244;
+  border-radius: 50%;
+}
+
+.option-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.option-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.option-desc {
+  font-size: 0.75rem;
+  color: #9a9a9a;
+}
+
+.notification-flow {
+  display: flex;
+  flex-direction: column;
+}
+
+.notif-item {
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.notif-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 4px 0;
 }
 
-/* Switch styling */
+.notif-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.notif-desc {
+  font-size: 0.75rem;
+  color: #9a9a9a;
+}
+
+/* Switches */
 .switch {
   position: relative;
   display: inline-block;
   width: 44px;
-  height: 22px;
+  height: 24px;
 }
+
 .switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
+
 .slider {
   position: absolute;
   cursor: pointer;
@@ -91,115 +186,77 @@
   bottom: 0;
   background-color: #e5e7eb;
   transition: .4s;
-  border-radius: 22px;
+  border-radius: 24px;
 }
+
 .slider:before {
   position: absolute;
   content: "";
   height: 18px;
   width: 18px;
-  left: 2px;
-  bottom: 2px;
+  left: 3px;
+  bottom: 3px;
   background-color: white;
   transition: .4s;
   border-radius: 50%;
 }
+
 input:checked + .slider {
-  background-color: var(--primary);
+  background-color: #52d244;
 }
+
 input:checked + .slider:before {
-  transform: translateX(22px);
+  transform: translateX(20px);
 }
 
-.option-card {
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
+.btn-success {
+  background: #52d244 !important;
+  color: white !important;
+  border-color: #52d244 !important;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.option-card:hover {
-  background: #f8fafc;
-}
-.option-card.active {
-  border-color: var(--primary);
-  background: white;
-}
-
-.radio-circle {
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--placeholder-color, #cbd5e1);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.option-card.disabled-option {
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
-  background: #f1f5f9;
-}
-
-/* Notification Flow Alignment */
-.notification-flow {
-  display: flex;
-  flex-direction: column;
-}
-
-.notif-item {
-  padding: 16px 0;
-}
-
-.notif-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-}
-
-.notif-title {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--text-main);
-  margin-bottom: 4px;
-}
-
-.notif-desc {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-}
-
-.notif-divider {
-  height: 1px;
-  background: var(--border-color);
-  width: 100%;
-}
-
-.toggle-row + .text-muted.text-xs {
-  margin-top: -4px;
   margin-bottom: 24px;
 }
 
-input:disabled, 
-input:disabled + .slider {
-  cursor: not-allowed;
-  opacity: 0.6;
+.summary-card {
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 16px 20px;
 }
 
-.settings-input-group[style*="opacity: 0.6"] input {
-  cursor: not-allowed;
+.summary-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 4px;
 }
 
-.border-top {
-  border-top: 1px solid var(--border-color);
+.summary-label {
+  font-size: 0.8rem;
+  color: #9a9a9a;
 }
 
-.pt-6 {
-  padding-top: 24px;
+@media (max-width: 768px) {
+  .settings-card {
+    padding: 20px;
+  }
+
+  .settings-input {
+    width: 100%;
+  }
+
+  .summary-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .notif-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
 }

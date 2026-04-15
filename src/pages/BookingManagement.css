@@ -92,3 +92,28 @@
   align-items: center;
   gap: 6px;
 }
+
+@media (max-width: 768px) {
+  .booking-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .filters-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-input, .search-input-container {
+    width: 100% !important;
+  }
+
+  .summary-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-meta {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}

@@ -24,35 +24,52 @@ const AuditTrail: React.FC = () => {
           </button>
           <h1 className="page-title">Audit Trail</h1>
         </div>
+        <button className="btn btn-primary btn-success">Export CSV</button>
       </div>
 
-      <div style={{marginBottom: 24, fontSize: '0.9rem', color: 'var(--text-muted)'}}>
-        Showing official records of administrative actions performed in the system.
+      <div className="summary-cards">
+        <div className="summary-card">
+          <div className="summary-value">8</div>
+          <div className="summary-label">Total Actions</div>
+        </div>
+        <div className="summary-card">
+          <div className="summary-value">1</div>
+          <div className="summary-label">Active Admins</div>
+        </div>
+        <div className="summary-card">
+          <div className="summary-value">Today</div>
+          <div className="summary-label">Latest Activity</div>
+        </div>
       </div>
+
+      <div className="results-count">5 records found</div>
 
       <div className="audit-logs-list">
         {logs.map(log => (
           <div key={log.id} className="audit-log-item">
-            <div className="timeline-connector"></div>
             <div className="audit-log-header">
               <div className="audit-action-box">
                 <div className="audit-icon-box" style={{background: log.color}}>
-                  <log.icon size={22} style={{color: log.iconColor}} />
+                  <log.icon size={20} style={{color: log.iconColor}} />
                 </div>
                 <div className="audit-details">
-                  <h3 style={{fontSize: '1.05rem', fontWeight: 700}}>{log.action}</h3>
-                  <p style={{fontSize: '0.9rem', color: 'var(--text-muted)', marginTop: 4, lineHeight: 1.4}}>{log.desc}</p>
-                  
-                  <div className="audit-meta" style={{paddingTop: 12, marginTop: 12, borderTop: '1px solid #f1f5f9'}}>
-                    <div className="audit-meta-item" style={{display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.8rem', color: 'var(--text-muted)'}}>
-                      <User size={14} /> Performed by: <span style={{fontWeight: 600, color: 'var(--text-main)'}}>{log.admin}</span>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="log-action-title">{log.action}</h3>
+                      <p className="log-action-desc">{log.desc}</p>
+                    </div>
+                    <div className="audit-timestamp">
+                      <div className="log-date">{log.date}</div>
+                      <div className="log-time">{log.time}</div>
                     </div>
                   </div>
+                  
+                  <div className="audit-meta">
+                    <User size={14} className="text-muted" /> 
+                    <span>Performed by: </span>
+                    <span className="performer-name">{log.admin}</span>
+                  </div>
                 </div>
-              </div>
-              <div className="audit-timestamp">
-                <div style={{fontWeight: 700, fontSize: '0.85rem'}}>{log.date}</div>
-                <div style={{fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: 2}}>{log.time}</div>
               </div>
             </div>
           </div>

@@ -21,7 +21,7 @@ const Settings: React.FC = () => {
         </div>
       </div>
 
-      <div className="settings-grid-layout">
+      <div className="settings-list-layout">
         <div className="settings-card">
           <div className="settings-section-header">
             <div className="settings-icon-box" style={{background: '#f0fdf4'}}>
@@ -58,7 +58,7 @@ const Settings: React.FC = () => {
         <div className="settings-card">
           <div className="settings-section-header">
             <div className="settings-icon-box" style={{background: '#fffbeb', color: '#ca8a04'}}>
-              <Clock size={22} />
+              <Clock size={20} />
             </div>
             <div className="settings-title-info">
               <h3>Cancellation & Refund Policy</h3>
@@ -69,33 +69,33 @@ const Settings: React.FC = () => {
           <div className="settings-input-group">
             <label className="settings-label">Fee Cancellation Window</label>
             <input type="text" className="settings-input" defaultValue="24 Hours" />
-            <p className="settings-help">Threshold for no-fee cancellation</p>
+            <p className="settings-help">before service start time</p>
           </div>
 
-          <p className="text-muted text-sm mb-6">Policy for refunds requested within the cancellation window:</p>
+          <p className="text-muted text-xs mb-4">Customers can cancel and get full refund if cancelled at least 24 hours before the service.</p>
 
-          <div className="refund-options">
-            <div className="option-card active">
-              <div className="radio-circle"><div className="radio-inner"></div></div>
-              <div className="option-info">
-                <h4>Full Refund</h4>
-                <p>100% refund of service amount</p>
+          <div className="refund-options-stack">
+            <div className="refund-option active">
+              <div className="radio-btn"><div className="radio-inner"></div></div>
+              <div className="option-text">
+                <span className="option-title">Full Refund</span>
+                <span className="option-desc">100% refund within cancellation window</span>
               </div>
             </div>
 
-            <div className="option-card disabled-option">
-              <div className="radio-circle"><div className="radio-inner"></div></div>
-              <div className="option-info">
-                <h4>Partial Refund</h4>
-                <p>50% refund within window</p>
+            <div className="refund-option">
+              <div className="radio-btn"></div>
+              <div className="option-text">
+                <span className="option-title">Partial Refund</span>
+                <span className="option-desc">50% refund within cancellation window</span>
               </div>
             </div>
 
-            <div className="option-card disabled-option">
-              <div className="radio-circle"><div className="radio-inner"></div></div>
-              <div className="option-info">
-                <h4>Custom / Manual Review</h4>
-                <p>All refunds require admin approval</p>
+            <div className="refund-option">
+              <div className="radio-btn"></div>
+              <div className="option-text">
+                <span className="option-title">Custom / Manual Review</span>
+                <span className="option-desc">All refunds require admin approval</span>
               </div>
             </div>
           </div>
@@ -103,8 +103,8 @@ const Settings: React.FC = () => {
 
         <div className="settings-card">
           <div className="settings-section-header">
-            <div className="settings-icon-box" style={{background: '#f0f9ff', color: '#0369a1'}}>
-              <Bell size={22} />
+            <div className="settings-icon-box" style={{background: '#fffbeb', color: '#ca8a04'}}>
+              <Clock size={20} />
             </div>
             <div className="settings-title-info">
               <h3>Automated Notifications</h3>
@@ -126,8 +126,6 @@ const Settings: React.FC = () => {
               </div>
             </div>
 
-            <div className="notif-divider"></div>
-
             <div className="notif-item">
               <div className="notif-row">
                 <div className="notif-text">
@@ -140,8 +138,6 @@ const Settings: React.FC = () => {
                 </label>
               </div>
             </div>
-
-            <div className="notif-divider"></div>
 
             <div className="notif-item">
               <div className="notif-row">
