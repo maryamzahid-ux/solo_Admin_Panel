@@ -1,15 +1,20 @@
-import React from 'react';
-import { Mail, KeyRound } from 'lucide-react';
+import React, { useState } from 'react';
+import { Mail, KeyRound, Eye, EyeOff } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 import logo from '../assets/logo.png';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     navigate('/dashboard');
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -37,7 +42,21 @@ const Login: React.FC = () => {
             <label className="form-label">Password <span>*</span></label>
             <div className="form-input-container">
               <KeyRound size={18} className="form-icon" />
-              <input type="password" required className="form-input" placeholder="Enter your password" defaultValue="password123" />
+              <input
+                type={showPassword ? "text" : "password"}
+                required
+                className="form-input"
+                placeholder="Enter your password"
+                defaultValue="password123"
+              />
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="password-toggle"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             </div>
           </div>
 
@@ -52,6 +71,15 @@ const Login: React.FC = () => {
             Sign In
           </button>
         </form>
+
+        <div style={{ textAlign: 'center', marginTop: 20, paddingTop: 20, borderTop: '1px solid #e5e7eb' }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: 12 }}>
+            Don't have credentials?
+          </p>
+          <Link to="/credential-request" className="btn btn-secondary w-full" style={{ padding: '12px', textDecoration: 'none', display: 'block' }}>
+            Request Credentials
+          </Link>
+        </div>
       </div>
     </div>
   );
