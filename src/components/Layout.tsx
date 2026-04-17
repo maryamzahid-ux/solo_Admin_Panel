@@ -2,10 +2,12 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Header from './Header';
+import { useLoadAdmin } from '../hooks/admin/useLoadAdmin';
 import './Layout.css';
 
 const Layout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  useLoadAdmin(); // Loads admin profile on mount
 
   return (
     <div className={`layout-wrapper ${sidebarOpen ? 'sidebar-open' : ''}`}>

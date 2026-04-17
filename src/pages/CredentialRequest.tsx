@@ -131,55 +131,60 @@ const CredentialRequest: React.FC = () => {
             <div className="form-row">
               <div className="form-group">
                 <label className="form-label">First Name <span>*</span></label>
-                <div className="form-input-container">
-                  <User size={18} className="form-icon" />
-                  <input
-                    type="text"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    required
-                    className="form-input"
-                    placeholder="Enter your first name"
-                  />
+                <div>
+                  <div className="form-input-container">
+                    <User size={18} className="form-icon" />
+                    <input
+                      type="text"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleInputChange}
+                      required
+                      className="form-input"
+                      placeholder="Enter your first name"
+                    />
+                  </div>
+                  {errors.firstName && <div style={{ color: '#ef4444', fontSize: '0.8rem', marginTop: '4px' }}>{errors.firstName}</div>}
                 </div>
-                {errors.firstName && <div style={{ color: '#ef4444', fontSize: '0.8rem', marginTop: '4px' }}>{errors.firstName}</div>}
               </div>
-
               <div className="form-group">
                 <label className="form-label">Last Name <span>*</span></label>
-                <div className="form-input-container">
-                  <User size={18} className="form-icon" />
-                  <input
-                    type="text"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    required
-                    className="form-input"
-                    placeholder="Enter your last name"
-                  />
+                <div>
+                  <div className="form-input-container">
+                    <User size={18} className="form-icon" />
+                    <input
+                      type="text"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                      required
+                      className="form-input"
+                      placeholder="Enter your last name"
+                    />
+                  </div>
+                  {errors.lastName && <div style={{ color: '#ef4444', fontSize: '0.8rem', marginTop: '4px' }}>{errors.lastName}</div>}
                 </div>
-                {errors.lastName && <div style={{ color: '#ef4444', fontSize: '0.8rem', marginTop: '4px' }}>{errors.lastName}</div>}
               </div>
             </div>
 
             {/* Email Field */}
             <div className="form-group">
               <label className="form-label">Email Address <span>*</span></label>
-              <div className="form-input-container">
-                <Mail size={18} className="form-icon" />
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                  className="form-input"
-                  placeholder="Enter your email address"
-                />
+              <div>
+                <div className="form-input-container">
+                  <Mail size={18} className="form-icon" />
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                    className="form-input"
+                    placeholder="Enter your email address"
+                  />
+                </div>
+                {errors.email && <div style={{ color: '#ef4444', fontSize: '0.8rem', marginTop: '4px' }}>{errors.email}</div>}
               </div>
-              {errors.email && <div style={{ color: '#ef4444', fontSize: '0.8rem', marginTop: '4px' }}>{errors.email}</div>}
             </div>
 
             {/* Admin Code Field */}
