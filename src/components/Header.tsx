@@ -1,11 +1,14 @@
 import { Bell, Menu } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
+import { useAdmin } from '../context/admin/AdminContext';
 
 interface HeaderProps {
   onMenuClick?: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
+  const { admin } = useAdmin();
+  const fullName = admin ? `${admin.firstName} ${admin.lastName}` : 'Admin';
   const location = useLocation();
   const isDashboard = location.pathname.includes('dashboard');
 
@@ -22,8 +25,11 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
       <div className="header-actions">
         <Bell className="header-bell" size={20} />
         <div className="header-profile">
-          <img src="https://i.pravatar.cc/150?u=mary" alt="Admin" />
-          <span>Hi Mary</span>
+          <img 
+            src={admin?.profile || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(fullName)} 
+            alt="Admin" 
+          />
+          <span>Hi, {fullName}</span>
         </div>
       </div>
     </header>

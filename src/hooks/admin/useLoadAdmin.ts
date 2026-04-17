@@ -1,28 +1,12 @@
 import { useEffect } from 'react';
 import { useAdmin } from '../../context/admin/AdminContext';
-import { getAdminProfile } from '../../api/admin.api.ts';
 
 export const useLoadAdmin = () => {
-  const { state, dispatch } = useAdmin();
-
-  const loadAdmin = async () => {
-    dispatch({ type: 'FETCH_START' });
-
-    try {
-      const res = await getAdminProfile();
-
-      dispatch({ type: 'FETCH_SUCCESS', payload: res.data });
-    } catch (err: any) {
-      dispatch({
-        type: 'FETCH_ERROR',
-        payload: err?.message || 'Failed to load admin',
-      });
-    }
-  };
+  const { admin, loading, error, loadAdmin } = useAdmin();
 
   useEffect(() => {
     loadAdmin();
   }, []);
 
-  return { state, loadAdmin };
+  return { admin, loading, error, loadAdmin };
 };

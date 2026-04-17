@@ -1,11 +1,14 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { useGetAdminProfile } from '../../api/admin.api';
+import { secureGetItem, secureSetItem, secureRemoveItem } from '../../utils/storage';
 
 // ─── Types ───────────────────────────────────────────────────
 export type Admin = {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  profile?: string; // Avatar URL
 };
 
 type AdminContextValue = {
@@ -22,13 +25,14 @@ const AdminContext = createContext<AdminContextValue | null>(null);
 
 // ─── Provider ────────────────────────────────────────────────
 export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
-  const [admin, setAdmin] = useState<Admin | null>(null);
+  const [admin, setAdmin] = useState<Admin | null>(() => secureGetItem('admin_data'));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const { getAdminProfile, error: profileError } = useGetAdminProfile();
 
   const loadAdmin = useCallback(async () => {
-    setLoading(true);
+    // Only show loading if we don't have data already (prevent flicker on refresh)
+    if (!admin) setLoading(true);
     setError('');
     try {
       const res = await getAdminProfile();
@@ -43,7 +47,18 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     } finally {
       setLoading(false);
     }
-  }, [getAdminProfile, profileError]);
+  }, [getAdminProfile, profileError, admin]);
+
+  // Sync admin state to storage automatically
+  useEffect(() => {
+    if (admin) {
+      secureSetItem('admin_data', admin);
+    } else {
+      // Clear storage on logout (when admin is null)
+      secureRemoveItem('admin_data');
+      secureRemoveItem('token');
+    }
+  }, [admin]);
 
   const clearAdmin = useCallback(() => {
     setAdmin(null);

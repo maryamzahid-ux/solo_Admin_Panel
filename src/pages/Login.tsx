@@ -51,10 +51,11 @@ const Login: React.FC = () => {
       if (res && res.success && res.data) {
 
 
-        if (res.data.admin) {
+        const adminData = res.data.admin || res.data;
+        if (adminData) {
           secureSetItem('token', res.data.accessToken);
-          secureSetItem('admin_data', res.data.admin);
-          setAdmin(res.data.admin);
+          secureSetItem('admin_data', adminData);
+          setAdmin(adminData);
         }
 
         // Check if admin needs to change password
@@ -89,9 +90,15 @@ const Login: React.FC = () => {
       const res = await changePassword(newPassword);
       if (res && res.success) {
         setShowPasswordModal(false);
-        secureSetItem('admin_data', res.data.admin);
-        secureSetItem('token', res.data.accessToken);
-        setAdmin(res.data.admin);
+        
+        // FIX: The backend returns the admin object directly in res.data 
+        // for the change password endpoint. Also, don't overwrite the token 
+        // if it's not provided in this specific response.
+        const adminData = res.data.admin || res.data;
+        
+        secureSetItem('admin_data', adminData);
+        setAdmin(adminData);
+        
         navigate('/dashboard');
       }
     } catch (err) {
