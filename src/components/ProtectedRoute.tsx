@@ -5,9 +5,6 @@ import { secureGetItem, secureRemoveItem } from '../utils/storage';
 const ProtectedRoute: React.FC = () => {
   const token = secureGetItem('token');
   const adminDataString = secureGetItem('admin_data');
-  console.log(adminDataString);
-  console.log(token);
-
   if (!token) {
     // If no token is found, redirect to the login page
     return <Navigate to="/login" replace />;
