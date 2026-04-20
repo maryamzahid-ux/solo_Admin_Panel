@@ -5,22 +5,7 @@ import './Dashboard.css';
 import { useGetDashboardStats, useGetRevenueStats, useGetJobsChart } from '../hooks/admin/dashboard/usedash';
 
 
-const jobsDataWeek = [
-  { name: 'Mon', completed: 15, inProgress: 8, cancelled: 2 },
-  { name: 'Tue', completed: 28, inProgress: 14, cancelled: 3 },
-  { name: 'Wed', completed: 18, inProgress: 6, cancelled: 1 },
-  { name: 'Thu', completed: 22, inProgress: 10, cancelled: 3 },
-  { name: 'Fri', completed: 18, inProgress: 14, cancelled: 4 },
-  { name: 'Sat', completed: 28, inProgress: 10, cancelled: 5 },
-  { name: 'Sun', completed: 15, inProgress: 4, cancelled: 2 },
-];
 
-const jobsDataMonth = [
-  { name: 'Wk 1', completed: 85, inProgress: 40, cancelled: 12 },
-  { name: 'Wk 2', completed: 110, inProgress: 55, cancelled: 8 },
-  { name: 'Wk 3', completed: 95, inProgress: 35, cancelled: 15 },
-  { name: 'Wk 4', completed: 125, inProgress: 60, cancelled: 10 },
-];
 
 const feesDataWeek = [
   { name: 'Mon', fee: 400 }, { name: 'Tue', fee: 1000 }, { name: 'Wed', fee: 1200 }, { name: 'Thu', fee: 900 }, { name: 'Fri', fee: 600 }, { name: 'Sat', fee: 1600 }, { name: 'Sun', fee: 900 },
