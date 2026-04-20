@@ -187,7 +187,7 @@ const Login: React.FC = () => {
             <p>Sign in to review performance, configure settings, and manage users.</p>
           </div>
 
-          <form onSubmit={handleLogin} style={{ marginTop: 24 }}>
+          <form onSubmit={handleLogin} style={{ marginTop: 24 }} autoComplete="off">
             <div className="form-group">
               <label className="form-label">Email Address <span>*</span></label>
               <div>
@@ -198,6 +198,7 @@ const Login: React.FC = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     required
+                    autoComplete="off"
                     className="form-input"
                     placeholder="Enter your email address"
                   />
@@ -214,6 +215,7 @@ const Login: React.FC = () => {
                   <input
                     type={showPassword ? "text" : "password"}
                     required
+                    autoComplete="new-password"
                     className="form-input"
                     placeholder="Enter your password"
                     name="password"
