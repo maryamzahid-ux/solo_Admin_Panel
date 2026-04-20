@@ -85,7 +85,7 @@ const CredentialRequest: React.FC = () => {
       onClose={clearError}
       onConfirm={clearError}
       title="Error"
-      description={typeof error === 'string' ? error : (error?.message || JSON.stringify(error))}
+      description={error}
       confirmText="OK"
       type="danger"
       icon={<XCircle size={24} />}
