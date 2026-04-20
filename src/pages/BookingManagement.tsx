@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Calendar, Clock, DollarSign, Wallet, ArrowLeft } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import Loader from '../components/Loader';
 import './BookingManagement.css';
 
 const initialBookings = [
