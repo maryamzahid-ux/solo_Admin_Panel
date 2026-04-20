@@ -12,3 +12,17 @@ export const useGetDashboardStats = () => {
     };
     return { getDashboardStats, loading, error, data, clearError };
 }
+
+
+export const useGetRevenueStats = () => {
+    const { request, loading, error, data, clearError } = useApi();
+    const getRevenueStats = async (range: string) => {
+        const res = await request({
+            url: `/revenue-stats?range=${range}`,
+            method: "GET",
+            withCredentials: true,
+        });
+        return res;
+    };
+    return { getRevenueStats, loading, error, data, clearError };
+}

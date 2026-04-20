@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Users, Briefcase, FileCheck, AlertCircle, CheckCircle, XCircle } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import './Dashboard.css';
-import { useGetDashboardStats } from '../hooks/admin/dashboard/usedash';
+import { useGetDashboardStats, useGetRevenueStats } from '../hooks/admin/dashboard/usedash';
 
 
 const jobsDataWeek = [
@@ -31,29 +31,45 @@ const feesDataMonth = [
 ];
 
 const Dashboard: React.FC = () => {
-  const [feesRange, setFeesRange] = useState('7d');
+  const [feesRange, setFeesRange] = useState('today');
   const [jobsRange, setJobsRange] = useState('week');
   const [trendRange, setTrendRange] = useState('week');
-  const [topCards, setTopCards] = useState<any>([]);
-  const { getDashboardStats } = useGetDashboardStats();
+  const [topCards, setTopCards] = useState<any>(null);
+  const [revenueData, setRevenueData] = useState<any>(null);
 
-  const fetchData = async () => {
+  const { getDashboardStats } = useGetDashboardStats();
+  const { getRevenueStats } = useGetRevenueStats();
+
+  const fetchDashboardStats = async () => {
     const res = await getDashboardStats();
-    setTopCards(res.data)
-    console.log(res.data)
-  }
+    setTopCards(res.data);
+  };
+
+  const fetchRevenueData = async (range: string) => {
+    // Map frontend range values to API values
+    const apiRange = range === 'today' ? '1' : (range === '7d' ? '7' : '30');
+    const res = await getRevenueStats(apiRange);
+    setRevenueData(res.data);
+  };
 
   useEffect(() => {
-    fetchData();
+    fetchDashboardStats();
   }, []);
 
+  useEffect(() => {
+    fetchRevenueData(feesRange);
+  }, [feesRange]);
+
   const getFeesAmount = () => {
-    if (feesRange === 'today') return '€750';
-    return feesRange === '7d' ? '€5,120' : '€24,850';
+    if (!revenueData) return '...';
+    return `€${revenueData.totalFees.toLocaleString()}`;
   };
+
   const getFeesGrowth = () => {
-    if (feesRange === 'today') return '↑ 5% from yesterday';
-    return feesRange === '7d' ? '↑ 18% from last week' : '↑ 12% from last month';
+    if (!revenueData) return '...';
+    const sign = revenueData.growth >= 0 ? '↑' : '↓';
+    const period = feesRange === 'today' ? 'yesterday' : (feesRange === '7d' ? 'last week' : 'last month');
+    return `${sign} ${Math.abs(revenueData.growth)}% from ${period}`;
   };
 
   const getJobsData = () => jobsRange === 'week' ? jobsDataWeek : jobsDataMonth;
@@ -126,21 +142,21 @@ const Dashboard: React.FC = () => {
         <div className="mini-card">
           <div className="mini-icon yellow"><AlertCircle size={24} /></div>
           <div>
-            <div style={{ fontSize: '1.25rem', fontWeight: '700' }}>42</div>
+            <div style={{ fontSize: '1.25rem', fontWeight: '700' }}>{topCards?.jobStatusOverview?.inProgress ?? 0}</div>
             <div className="text-muted text-sm">In Progress</div>
           </div>
         </div>
         <div className="mini-card">
           <div className="mini-icon green"><CheckCircle size={24} /></div>
           <div>
-            <div style={{ fontSize: '1.25rem', fontWeight: '700' }}>2,987</div>
+            <div style={{ fontSize: '1.25rem', fontWeight: '700' }}>{topCards?.jobStatusOverview?.completed ?? 0}</div>
             <div className="text-muted text-sm">Completed</div>
           </div>
         </div>
         <div className="mini-card">
           <div className="mini-icon red"><XCircle size={24} /></div>
           <div>
-            <div style={{ fontSize: '1.25rem', fontWeight: '700' }}>216</div>
+            <div style={{ fontSize: '1.25rem', fontWeight: '700' }}>{topCards?.jobStatusOverview?.cancelled ?? 0}</div>
             <div className="text-muted text-sm">Cancelled</div>
           </div>
         </div>
