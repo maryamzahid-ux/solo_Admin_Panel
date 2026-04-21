@@ -4,7 +4,7 @@ export const useGetAdminProfile = () => {
     const { loading, error, request, clearError } = useApi();
 
     const getAdminProfile = async () => {
-        const res = await request({ url: '/profile', method: 'GET' });
+        const res = await request({ url: '/auth/profile', method: 'GET' });
         return res;
     };
 

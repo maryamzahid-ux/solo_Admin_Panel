@@ -4,7 +4,7 @@ export const useLogin = () => {
     const { request, loading, error, clearError } = useApi();
     const login = async (email: string, password: string) => {
         const res = await request({
-            url: '/signin',
+            url: '/auth/signin',
             method: 'POST',
             data: { email, password },
         });
@@ -17,7 +17,7 @@ export const useChangePassword = () => {
     const { request, loading, error, clearError } = useApi();
     const changePassword = async (newPassword: string) => {
         const res = await request({
-            url: '/change-password',
+            url: '/auth/change-password',
             method: 'POST',
             withCredentials: true,
             data: { newPassword },
@@ -31,7 +31,7 @@ export const useLogout = () => {
     const { request, loading, error, clearError } = useApi();
     const logout = async () => {
         const res = await request({
-            url: '/logout',
+            url: '/auth/logout',
             method: 'POST',
             withCredentials: true,
         });
@@ -44,7 +44,7 @@ export const useForgotPassword = () => {
     const { request, loading, error, clearError } = useApi();
     const forgotPassword = async (email: string) => {
         const res = await request({
-            url: '/forgot-password',
+            url: '/auth/forgot-password',
             method: 'POST',
             data: { email },
         });
@@ -57,7 +57,7 @@ export const useResetPassword = () => {
     const { request, loading, error, clearError } = useApi();
     const resetPassword = async (token: string, newPassword: string) => {
         const res = await request({
-            url: '/reset-password',
+            url: '/auth/reset-password',
             method: 'POST',
             data: { token, newPassword },
         });
