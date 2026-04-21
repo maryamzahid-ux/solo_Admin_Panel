@@ -65,7 +65,7 @@ const CredentialRequest: React.FC = () => {
       }
 
       const res = await request({
-        url: '/onboard',
+        url: '/auth/onboard',
         method: 'POST',
         data: formPayload,
         headers: { 'Content-Type': 'multipart/form-data' },
