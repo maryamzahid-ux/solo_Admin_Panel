@@ -286,3 +286,40 @@ h4 {
 .grid-cols-2 {
   grid-template-columns: repeat(2, 1fr);
 }
+
+/* Animations & Colors */
+.animate-in {
+  animation-duration: 400ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  animation-fill-mode: both;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation-name: fade-in;
+}
+
+@keyframes slide-in-right {
+  from { transform: translateX(16px); }
+  to { transform: translateX(0); }
+}
+
+.slide-in-from-right-4 {
+  animation-name: slide-in-right;
+}
+
+.text-green-600 {
+  color: #16a34a;
+}
+
+.text-red-600 {
+  color: #dc2626;
+}
+
+.font-medium {
+    font-weight: 500;
+}
