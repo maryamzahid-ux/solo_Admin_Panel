@@ -71,11 +71,6 @@ const Settings: React.FC = () => {
     }
   };
 
-  const handleReset = () => {
-    setFormData(settings);
-    // showToast('Changes discarded', 'info');
-  };
-
   const handleRestoreDefaults = () => {
     setIsResetModalOpen(true);
   };
@@ -113,14 +108,6 @@ const Settings: React.FC = () => {
             <h1 className="page-title">System Settings</h1>
           </div>
           <div className="flex gap-4 items-center">
-            {/* <button
-              className="btn btn-outline"
-              style={{ padding: '10px 24px' }}
-              onClick={handleReset}
-              disabled={!hasChanges || updating || resetting}
-            >
-              Reset
-            </button> */}
             <button
               className="btn btn-primary"
               style={{ padding: '10px 24px', position: 'relative' }}
