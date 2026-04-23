@@ -16,6 +16,7 @@ import Settings from './pages/Settings';
 import CustomerDetail from './pages/CustomerDetail';
 import ProtectedRoute from './components/ProtectedRoute';
 import ResetPassword from './pages/ResetPassword';
+import PayoutManagement from './pages/PayoutManagement';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
                 <Route path="bookings" element={<BookingManagement />} />
                 <Route path="bookings/:id" element={<BookingDetail />} />
                 <Route path="audit" element={<AuditTrail />} />
+                <Route path="payouts" element={<PayoutManagement />} />
                 <Route path="settings" element={<Settings />} />
               </Route>
             </Route>
