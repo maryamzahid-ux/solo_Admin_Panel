@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Modal from '../components/Modal';
 import { useGetUserDetails, useUpdateUserStatus, useUpdateAdminNotes } from '../api/admin.api';
 import Loader from '../components/Loader';
-import { MapPin, MessageSquare } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import './UserDetail.css';
 
 const CustomerDetail: React.FC = () => {

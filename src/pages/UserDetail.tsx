@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, CheckCircle2, Calendar, Mail, MapPin, Briefcase, Phone, Medal, MoreVertical, Play, FileText, MessageSquare } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Calendar, Mail, MapPin, Briefcase, Phone, Medal, MoreVertical, Play, FileText } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Modal from '../components/Modal';
 import { useGetUserDetails, useUpdateUserStatus, useUpdateAdminNotes } from '../api/admin.api';
@@ -340,7 +340,7 @@ const UserDetail: React.FC = () => {
           <div className="notes-history" style={{ marginBottom: '24px' }}>
             {user.adminNotes.map((note: any) => {
               const authorName = note.admin ? `${note.admin.firstName || ''} ${note.admin.lastName || ''}`.trim() || note.admin.email : 'System';
-              const initials = authorName.split(' ').map((n: string) => n[0]).join('').substring(0, 2);
+              // const initials = authorName.split(' ').map((n: string) => n[0]).join('').substring(0, 2);
 
               return (
                 <div key={note.id} className="note-item">
