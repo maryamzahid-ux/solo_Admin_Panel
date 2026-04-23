@@ -1,40 +1,82 @@
-import React, { useState } from 'react';
-import { Search, Calendar, Briefcase, CheckCircle2, ArrowLeft } from 'lucide-react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Search, Calendar, Briefcase, CheckCircle2, ArrowLeft, UserX, Loader2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useGetUsers } from '../api/admin.api';
 import './UserManagement.css';
-
-const initialUsers = [
-  { id: 1, name: 'Sarah Mitchell', email: 'sarah.mitchell@email.com', phone: '+353 01 12345678', role: 'Professional', status: 'Active', joined: '1/15/2025', bookings: 12, avatar: 'https://i.pravatar.cc/150?u=sarah', verified: true },
-  { id: 2, name: 'John Anderson', email: 'john.anderson@email.com', phone: '+353 01 12345678', role: 'Customer', status: 'Active', joined: '1/15/2025', bookings: 45, avatar: 'https://i.pravatar.cc/150?u=john', verified: true },
-  { id: 3, name: 'Emma Wilson', email: 'emma.wilson@email.com', phone: '+353 01 12345678', role: 'Professional', status: 'Pending Verification', joined: '1/15/2025', bookings: 12, avatar: 'https://i.pravatar.cc/150?u=emma', verified: true },
-  { id: 4, name: 'Michael Brown', email: 'michael.brown@email.com', phone: '+353 01 12345678', role: 'Customer', status: 'Active', joined: '1/15/2025', bookings: 28, avatar: 'https://i.pravatar.cc/150?u=michael', verified: true },
-  { id: 5, name: 'Lisa Rodriguez', email: 'lisa.rodriguez@email.com', phone: '+353 01 12345678', role: 'Professional', status: 'Inactive', joined: '1/15/2025', bookings: 67, avatar: 'https://i.pravatar.cc/150?u=lisa', verified: true },
-  { id: 6, name: 'David Smith', email: 'david.smith@email.com', phone: '+353 01 87654321', role: 'Customer', status: 'Active', joined: '2/10/2025', bookings: 5, avatar: 'https://i.pravatar.cc/150?u=david', verified: false },
-  { id: 7, name: 'Sophie Taylor', email: 'sophie.taylor@email.com', phone: '+353 01 55566677', role: 'Professional', status: 'Pending Verification', joined: '3/01/2025', bookings: 0, avatar: 'https://i.pravatar.cc/150?u=sophie', verified: false },
-];
+import Loader from '../components/Loader';
 
 const UserManagement: React.FC = () => {
   const navigate = useNavigate();
   const [statusFilter, setStatusFilter] = useState('All');
   const [typeFilter, setTypeFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
-  const [visibleCount, setVisibleCount] = useState(4);
+  const [users, setUsers] = useState<any[]>([]);
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [totalUsers, setTotalUsers] = useState(0);
 
-  const handleViewAll = () => {
-    setVisibleCount(prev => prev + 4);
+  const { getUsers, loading } = useGetUsers();
+
+  const fetchUsers = async (cursor?: string) => {
+    try {
+      const roleMap: any = { 'Customers': 'CUSTOMER', 'Professionals': 'PROFESSIONAL', 'All': 'ALL' };
+      const statusMap: any = {
+        'Active': 'ACTIVE',
+        'Inactive': 'BLOCKED',
+        'Pending Verification': 'PENDING_VERIFICATION',
+        'All': 'ALL'
+      };
+
+      const res = await getUsers({
+        role: roleMap[typeFilter],
+        status: statusMap[statusFilter],
+        search: searchQuery,
+        cursor,
+        limit: 10
+      });
+
+      if (res?.success) {
+        if (cursor) {
+          setUsers(prev => [...prev, ...res.data.users]);
+        } else {
+          setUsers(res.data.users);
+          console.log(res.data);
+        }
+        setNextCursor(res.data.nextCursor);
+        setTotalUsers(res.data.totalCount || 0);
+      }
+    } catch (error) {
+      console.error("Failed to fetch users:", error);
+    }
   };
 
-  const filteredUsers = initialUsers.filter(user => {
-    const matchesStatus = statusFilter === 'All' || user.status === statusFilter;
-    const matchesType = typeFilter === 'All' || 
-                       (typeFilter === 'Customers' && user.role === 'Customer') ||
-                       (typeFilter === 'Professionals' && user.role === 'Professional');
-    const matchesSearch = user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          user.phone.includes(searchQuery);
-    
-    return matchesStatus && matchesType && matchesSearch;
-  });
+  useEffect(() => {
+    fetchUsers(); // Reset on filters change
+  }, [statusFilter, typeFilter, searchQuery]);
+
+  // Infinite scroll intersection observer
+  const observer = useRef<IntersectionObserver | null>(null);
+  const lastUserElementRef = useCallback((node: HTMLAnchorElement | null) => {
+    if (loading) return;
+    if (observer.current) observer.current.disconnect();
+
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && nextCursor) {
+        fetchUsers(nextCursor);
+      }
+    });
+
+    if (node) observer.current.observe(node);
+  }, [loading, nextCursor]);
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString();
+  };
+
+  if (loading && users.length === 0) {
+    return (
+      <Loader />
+    );
+  }
 
   return (
     <div>
@@ -46,9 +88,9 @@ const UserManagement: React.FC = () => {
           <h1 className="page-title">User Management</h1>
         </div>
         <div className="filters-row">
-          <select 
-            className="form-input" 
-            style={{width: 180}}
+          <select
+            className="form-input"
+            style={{ width: 180 }}
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
@@ -57,9 +99,9 @@ const UserManagement: React.FC = () => {
             <option value="Inactive">Inactive</option>
             <option value="Pending Verification">Pending Verification</option>
           </select>
-          <select 
-            className="form-input" 
-            style={{width: 160}}
+          <select
+            className="form-input"
+            style={{ width: 160 }}
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
           >
@@ -68,9 +110,9 @@ const UserManagement: React.FC = () => {
             <option value="Professionals">Professionals</option>
           </select>
           <div className="search-input-container">
-            <input 
-              type="text" 
-              placeholder="Search by name, email, or phone" 
+            <input
+              type="text"
+              placeholder="Search by name, email, or phone"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -81,51 +123,67 @@ const UserManagement: React.FC = () => {
 
       <div className="summary-cards">
         <div className="summary-card">
-          <div style={{fontSize: '2rem', fontWeight: 700, marginBottom: '8px'}}>7</div>
-          <div className="text-muted" style={{fontSize: '0.9rem'}}>Total Users</div>
+          <div style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '8px' }}>{totalUsers}</div>
+          <div className="text-muted" style={{ fontSize: '0.9rem' }}>Total Users Found</div>
         </div>
         <div className="summary-card">
-          <div style={{fontSize: '2rem', fontWeight: 700, marginBottom: '8px'}}>4</div>
-          <div className="text-muted" style={{fontSize: '0.9rem'}}>Customers</div>
+          <div style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '8px' }}>{users.filter(u => u.role === 'CUSTOMER').length}</div>
+          <div className="text-muted" style={{ fontSize: '0.9rem' }}>Loaded Customers</div>
         </div>
         <div className="summary-card">
-          <div style={{fontSize: '2rem', fontWeight: 700, marginBottom: '8px'}}>3</div>
-          <div className="text-muted" style={{fontSize: '0.9rem'}}>Professionals</div>
+          <div style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '8px' }}>{users.filter(u => u.role === 'PROFESSIONAL').length}</div>
+          <div className="text-muted" style={{ fontSize: '0.9rem' }}>Loaded Professionals</div>
         </div>
       </div>
 
-      <div className="flex justify-between items-center" style={{marginBottom: 20}}>
-        <div style={{fontSize: '0.9rem', color: 'var(--text-muted)', fontWeight: 500}}>
-          {filteredUsers.length} users found
+      <div className="flex justify-between items-center" style={{ marginBottom: 20 }}>
+        <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)', fontWeight: 500 }}>
+          Showing {users.length} of {totalUsers} users
         </div>
       </div>
 
       <div className="user-grid">
-        {filteredUsers.slice(0, visibleCount).map(user => (
-          <Link to={user.role === 'Customer' ? `/customers/${user.id}` : `/users/${user.id}`} key={user.id} className="user-card">
+        {users.length === 0 && !loading && (
+          <div className="empty-state-message">
+            <UserX size={48} className="text-muted" style={{ marginBottom: '16px', opacity: 0.5 }} />
+            <div className="text-muted">No users found matching your search or filters.</div>
+            <div className="text-xs text-muted" style={{ marginTop: '8px' }}>Try adjusting your filters or search query.</div>
+          </div>
+        )}
+        {users.map((user, index) => (
+          <Link
+            to={user.role === 'CUSTOMER' ? `/customers/${user.id}` : `/users/${user.id}`}
+            key={user.id}
+            className="user-card"
+            ref={users.length === index + 1 ? lastUserElementRef : null}
+          >
             <div className="user-status">
               <span className={`badge ${user.status.toLowerCase().replace(' ', '-')}`}>{user.status}</span>
-              {user.status === 'Pending Verification' && <span className="badge active">Active</span>}
             </div>
             <div className="user-card-header">
-              <img src={user.avatar} className="user-avatar" alt={user.name} />
+              <img
+                src={user.avatar || 'https://via.placeholder.com/150'}
+                className="user-avatar"
+                alt={user.name}
+                onError={(e: any) => { e.target.src = 'https://via.placeholder.com/150' }}
+              />
               <div className="user-info">
                 <div className="user-name">
-                  {user.name} 
-                  {user.verified && <CheckCircle2 className="verified-icon" />}
+                  {user.name}
+                  {user.isVerified && <CheckCircle2 className="verified-icon" />}
                 </div>
                 <div className="user-email">{user.email}</div>
-                <div className="user-phone" style={{fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: 2}}>{user.phone}</div>
-                <div className={`user-role role-${user.role.toLowerCase()}`} style={{marginTop: 8}}>{user.role}</div>
+                <div className="user-phone" style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: 2 }}>{user.number}</div>
+                <div className={`user-role role-${user.role.toLowerCase()}`} style={{ marginTop: 8 }}>{user.role}</div>
               </div>
             </div>
             <div className="user-card-footer">
               <div className="footer-item">
-                <Calendar size={16} /> Joined {user.joined}
+                <Calendar size={16} /> Joined {formatDate(user.createdAt)}
               </div>
-              {user.role !== 'Customer' && (
+              {user.role === 'PROFESSIONAL' && (
                 <div className="footer-item">
-                  <Briefcase size={16} /> {user.bookings} bookings
+                  <Briefcase size={16} /> {user.bookingsCount} bookings
                 </div>
               )}
             </div>
@@ -133,19 +191,12 @@ const UserManagement: React.FC = () => {
         ))}
       </div>
 
-      {filteredUsers.length > visibleCount && (
-        <div style={{ textAlign: 'center', marginTop: 32 }}>
-          <button 
-            type="button"
-            className="text-muted text-sm font-medium" 
-            style={{background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline'}}
-            onClick={handleViewAll}
-          >
-            View All Members
-          </button>
+      {loading && users.length > 0 && (
+        <div className="flex justify-center items-center" style={{ marginTop: 32, marginBottom: 32 }}>
+          <Loader2 className="animate-spin text-primary" size={32} />
         </div>
       )}
-      <div style={{height: 40}}></div>
+      <div style={{ height: 40 }}></div>
     </div>
   );
 };
