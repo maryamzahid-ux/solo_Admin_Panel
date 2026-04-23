@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, Calendar, FileText, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, Calendar, FileText, Settings, LogOut, DollarSign } from 'lucide-react';
 import logo from '../assets/logo.png';
 import { useLogout } from '../hooks/authHook';
 import { useAdmin } from '../context/admin/AdminContext';
@@ -12,6 +12,7 @@ const navItems = [
   { path: '/dashboard', icon: LayoutDashboard, title: 'Dashboard', subtitle: 'View insights' },
   { path: '/users', icon: Users, title: 'User Management', subtitle: 'Manage all users' },
   { path: '/bookings', icon: Calendar, title: 'Booking Management', subtitle: 'Monitor all bookings' },
+  { path: '/payouts', icon: DollarSign, title: 'Payouts', subtitle: 'Approve payments' },
   { path: '/audit', icon: FileText, title: 'Audit Trail', subtitle: 'Manage all logs' },
   { path: '/settings', icon: Settings, title: 'Settings', subtitle: 'Manage system settings' }
 ];

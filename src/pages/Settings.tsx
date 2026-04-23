@@ -19,6 +19,14 @@ const Settings: React.FC = () => {
   const [formData, setFormData] = useState<PlatformSettings | null>(null);
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
 
+    const fetchSettings = async () => {
+    const res = await getSettings();
+    if (res?.success) {
+      setSettings(res.data);
+      setFormData(res.data);
+    }
+  };
+  
   useEffect(() => {
     const init = async () => {
       await fetchSettings();
@@ -26,13 +34,7 @@ const Settings: React.FC = () => {
     init();
   }, []);
 
-  const fetchSettings = async () => {
-    const res = await getSettings();
-    if (res?.success) {
-      setSettings(res.data);
-      setFormData(res.data);
-    }
-  };
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
