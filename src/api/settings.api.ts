@@ -4,7 +4,6 @@ export interface PlatformSettings {
     professionalCommission: number;
     customerSideFee: number;
     customerSideFeeEnabled: boolean;
-    stripeProcessingFee: number;
     cancellationWindow: number;
     refundPolicy: 'FULL' | 'PARTIAL' | 'MANUAL';
     remindersEnabled: boolean;
