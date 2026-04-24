@@ -4,7 +4,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Modal from '../components/Modal';
 import { useGetUserDetails, useUpdateUserStatus, useUpdateAdminNotes } from '../api/admin.api';
 import Loader from '../components/Loader';
-import { MapPin } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
 import './UserDetail.css';
 
@@ -15,7 +14,6 @@ const CustomerDetail: React.FC = () => {
 
   const [user, setUser] = useState<any>(null);
   const [newNote, setNewNote] = useState('');
-  const [locationName, setLocationName] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'success' | 'warning' | 'danger'>('success');
   const [modalTitle, setModalTitle] = useState('');
@@ -27,20 +25,6 @@ const CustomerDetail: React.FC = () => {
   const { updateUserStatus, loading: statusLoading } = useUpdateUserStatus();
   const { updateAdminNotes, loading: notesLoading } = useUpdateAdminNotes();
 
-  const fetchLocationName = async (lat: number, lon: number) => {
-    try {
-      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
-      const data = await response.json();
-      if (data.display_name) {
-        const parts = data.address;
-        const city = parts.city || parts.town || parts.village || parts.suburb || '';
-        const country = parts.country || '';
-        setLocationName(city && country ? `${city}, ${country}` : data.display_name);
-      }
-    } catch (error) {
-      console.error("Failed to reverse geocode:", error);
-    }
-  };
 
   const fetchUser = async () => {
     if (!id) return;
@@ -48,9 +32,6 @@ const CustomerDetail: React.FC = () => {
       const res = await getUserDetails(id);
       if (res?.success) {
         setUser(res.data);
-        if (res.data.latitude && res.data.longitude) {
-          fetchLocationName(res.data.latitude, res.data.longitude);
-        }
       }
     } catch (error) {
       console.error("Failed to fetch customer details:", error);
@@ -188,9 +169,6 @@ const CustomerDetail: React.FC = () => {
           </div>
           <div className="info-item">
             <Calendar size={18} className="info-icon" /> Joined {formatDate(user.createdAt)}
-          </div>
-          <div className="info-item">
-            <MapPin size={18} className="info-icon" /> {locationName || user.address || 'No address info'}
           </div>
           <div className="info-item">
             <Briefcase size={18} className="info-icon" /> {user.metrics?.totalBookings || 0} Services Availed
