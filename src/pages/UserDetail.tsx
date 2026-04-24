@@ -88,7 +88,7 @@ const UserDetail: React.FC = () => {
           'success',
           'Note Added',
           'The admin note has been successfully added for this user.',
-          'Dismiss',
+          'Confirm',
           () => setIsModalOpen(false)
         );
       }
