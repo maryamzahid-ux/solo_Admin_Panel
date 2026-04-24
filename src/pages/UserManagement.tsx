@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Search, Calendar, Briefcase, CheckCircle2, ArrowLeft, UserX, Users, UserCheck } from 'lucide-react';
+import { Search, Calendar, Briefcase, CheckCircle2, ArrowLeft, UserX, Users, UserCheck, Filter, ChevronDown } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useGetUsers } from '../api/admin.api';
 import './UserManagement.css';
@@ -16,6 +16,24 @@ const UserManagement: React.FC = () => {
   const [totalUsers, setTotalUsers] = useState(0);
 
   const { getUsers, loading } = useGetUsers();
+
+  const [showStatusDropdown, setShowStatusDropdown] = useState(false);
+  const [showTypeDropdown, setShowTypeDropdown] = useState(false);
+  const statusFilterRef = useRef<HTMLDivElement | null>(null);
+  const typeFilterRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (statusFilterRef.current && !statusFilterRef.current.contains(e.target as Node)) {
+        setShowStatusDropdown(false);
+      }
+      if (typeFilterRef.current && !typeFilterRef.current.contains(e.target as Node)) {
+        setShowTypeDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
 
   const fetchUsers = async (cursor?: string) => {
     try {
@@ -89,27 +107,53 @@ const UserManagement: React.FC = () => {
           <h1 className="page-title">User Management</h1>
         </div>
         <div className="filters-row">
-          <select
-            className="form-input"
-            style={{ width: 180 }}
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-          >
-            <option value="All">All Status</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
-            <option value="Pending Verification">Pending Verification</option>
-          </select>
-          <select
-            className="form-input"
-            style={{ width: 160 }}
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value)}
-          >
-            <option value="All">All Users</option>
-            <option value="Customers">Customers</option>
-            <option value="Professionals">Professionals</option>
-          </select>
+          <div className="custom-filter-wrapper" ref={statusFilterRef}>
+            <button
+              className={`custom-filter-btn ${statusFilter !== 'All' ? 'active' : ''}`}
+              onClick={() => setShowStatusDropdown(!showStatusDropdown)}
+            >
+              <Filter size={16} />
+              {statusFilter === 'All' ? 'All Status' : statusFilter}
+              <ChevronDown size={14} />
+            </button>
+            {showStatusDropdown && (
+              <div className="custom-filter-dropdown">
+                {['All', 'Active', 'Inactive', 'Pending Verification'].map(opt => (
+                  <button
+                    key={opt}
+                    className={`custom-filter-option ${statusFilter === opt ? 'selected' : ''}`}
+                    onClick={() => { setStatusFilter(opt); setShowStatusDropdown(false); }}
+                  >
+                    {opt === 'All' ? 'All Status' : opt}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="custom-filter-wrapper" ref={typeFilterRef}>
+            <button
+              className={`custom-filter-btn ${typeFilter !== 'All' ? 'active' : ''}`}
+              onClick={() => setShowTypeDropdown(!showTypeDropdown)}
+            >
+              <Filter size={16} />
+              {typeFilter === 'All' ? 'All Users' : typeFilter}
+              <ChevronDown size={14} />
+            </button>
+            {showTypeDropdown && (
+              <div className="custom-filter-dropdown">
+                {['All', 'Customers', 'Professionals'].map(opt => (
+                  <button
+                    key={opt}
+                    className={`custom-filter-option ${typeFilter === opt ? 'selected' : ''}`}
+                    onClick={() => { setTypeFilter(opt); setShowTypeDropdown(false); }}
+                  >
+                    {opt === 'All' ? 'All Users' : opt}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
           <div className="search-input-container">
             <input
               type="text"

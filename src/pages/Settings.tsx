@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, Shield, Bell, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Shield, Bell, RotateCcw, Save } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useGetSettings, useUpdateSettings, useResetSettings, type PlatformSettings } from '../api/settings.api';
 import './Settings.css';
@@ -112,10 +112,11 @@ const Settings: React.FC = () => {
           <div className="flex gap-4 items-center">
             <button
               className="btn btn-primary"
-              style={{ padding: '10px 24px', position: 'relative' }}
+              style={{ padding: '10px 24px', position: 'relative', display: 'flex', alignItems: 'center', gap: '8px' }}
               onClick={handleSave}
               disabled={!hasChanges || updating || resetting}
             >
+              <Save size={18} />
               {updating ? 'Saving...' : 'Save Changes'}
             </button>
           </div>
@@ -302,9 +303,11 @@ const Settings: React.FC = () => {
             <p>Irreversible actions for system configuration</p>
             <button
               className="btn-danger-link"
+              style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '0' }}
               onClick={handleRestoreDefaults}
               disabled={updating || resetting}
             >
+              <RotateCcw size={18} />
               {resetting ? 'Resetting System...' : 'Restore Factory Defaults'}
             </button>
           </div>
