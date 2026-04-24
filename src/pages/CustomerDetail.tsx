@@ -5,11 +5,13 @@ import Modal from '../components/Modal';
 import { useGetUserDetails, useUpdateUserStatus, useUpdateAdminNotes } from '../api/admin.api';
 import Loader from '../components/Loader';
 import { MapPin } from 'lucide-react';
+import { useToast } from '../context/ToastContext';
 import './UserDetail.css';
 
 const CustomerDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const [user, setUser] = useState<any>(null);
   const [newNote, setNewNote] = useState('');
@@ -81,13 +83,7 @@ const CustomerDetail: React.FC = () => {
       if (res?.success) {
         setNewNote('');
         fetchUser(); // Refresh to show the new note in the list
-        openModal(
-          'success',
-          'Note Added',
-          'The admin note has been successfully added for this customer.',
-          'Confirm',
-          () => setIsModalOpen(false)
-        );
+        showToast('Admin note added successfully');
       }
     } catch (error) {
       console.error("Failed to add note:", error);
