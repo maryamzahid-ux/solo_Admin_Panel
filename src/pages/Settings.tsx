@@ -168,12 +168,6 @@ const Settings: React.FC = () => {
                 disabled
               />
             </div>
-
-            <div className="settings-input-group disabled">
-              <label className="settings-label">Payment Processing Fee (Stripe %)</label>
-              <input type="text" className="settings-input" value={formData.stripeProcessingFee} disabled />
-              <p className="settings-help">Fixed for standard accounts</p>
-            </div>
           </div>
 
           <div className="settings-card">
