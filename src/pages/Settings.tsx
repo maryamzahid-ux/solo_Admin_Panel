@@ -19,14 +19,14 @@ const Settings: React.FC = () => {
   const [formData, setFormData] = useState<PlatformSettings | null>(null);
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
 
-    const fetchSettings = async () => {
+  const fetchSettings = async () => {
     const res = await getSettings();
     if (res?.success) {
       setSettings(res.data);
       setFormData(res.data);
     }
   };
-  
+
   useEffect(() => {
     const init = async () => {
       await fetchSettings();
@@ -303,7 +303,7 @@ const Settings: React.FC = () => {
             <p>Irreversible actions for system configuration</p>
             <button
               className="btn-danger-link"
-              style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '0' }}
+              style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 20px' }}
               onClick={handleRestoreDefaults}
               disabled={updating || resetting}
             >
