@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Search, Calendar, Briefcase, CheckCircle2, ArrowLeft, UserX, Loader2 } from 'lucide-react';
+import { Search, Calendar, Briefcase, CheckCircle2, ArrowLeft, UserX, Users, UserCheck } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useGetUsers } from '../api/admin.api';
 import './UserManagement.css';
 import Loader from '../components/Loader';
+import InternalLoader from '../components/InternalLoader';
 
 const UserManagement: React.FC = () => {
   const navigate = useNavigate();
@@ -123,16 +124,31 @@ const UserManagement: React.FC = () => {
 
       <div className="summary-cards">
         <div className="summary-card">
-          <div style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '8px' }}>{totalUsers}</div>
-          <div className="text-muted" style={{ fontSize: '0.9rem' }}>Total Users Found</div>
+          <div className="summary-icon-box" style={{ background: '#f0fdf4' }}>
+            <Users size={20} style={{ color: '#22c55e' }} />
+          </div>
+          <div>
+            <div className="summary-value">{totalUsers}</div>
+            <div className="summary-label">Total Users Found</div>
+          </div>
         </div>
         <div className="summary-card">
-          <div style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '8px' }}>{users.filter(u => u.role === 'CUSTOMER').length}</div>
-          <div className="text-muted" style={{ fontSize: '0.9rem' }}>Loaded Customers</div>
+          <div className="summary-icon-box" style={{ background: '#eff6ff' }}>
+            <UserCheck size={20} style={{ color: '#3b82f6' }} />
+          </div>
+          <div>
+            <div className="summary-value">{users.filter(u => u.role === 'CUSTOMER').length}</div>
+            <div className="summary-label">Loaded Customers</div>
+          </div>
         </div>
         <div className="summary-card">
-          <div style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '8px' }}>{users.filter(u => u.role === 'PROFESSIONAL').length}</div>
-          <div className="text-muted" style={{ fontSize: '0.9rem' }}>Loaded Professionals</div>
+          <div className="summary-icon-box" style={{ background: '#fefce8' }}>
+            <Briefcase size={20} style={{ color: '#d97706' }} />
+          </div>
+          <div>
+            <div className="summary-value">{users.filter(u => u.role === 'PROFESSIONAL').length}</div>
+            <div className="summary-label">Loaded Professionals</div>
+          </div>
         </div>
       </div>
 
@@ -192,11 +208,13 @@ const UserManagement: React.FC = () => {
       </div>
 
       {loading && users.length > 0 && (
-        <div className="flex justify-center items-center" style={{ marginTop: 32, marginBottom: 32 }}>
-          <Loader2 className="animate-spin text-primary" size={32} />
-        </div>
+        <>
+          <div style={{ height: 40 }} />
+          <InternalLoader />
+          <div style={{ height: 40 }} />
+        </>
+
       )}
-      <div style={{ height: 40 }}></div>
     </div>
   );
 };

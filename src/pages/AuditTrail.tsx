@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useGetAuditLogs, type AuditLog } from '../api/audit.api';
 import Loader from '../components/Loader';
 import './AuditTrail.css';
+import InternalLoader from '../components/InternalLoader';
 
 const ACTION_CONFIG: Record<string, { icon: React.ElementType; color: string; iconColor: string; label: string }> = {
   USER_VERIFIED: { icon: CheckCircle, color: '#f0fdf4', iconColor: '#22c55e', label: 'User Verified' },
@@ -143,26 +144,39 @@ const AuditTrail: React.FC = () => {
 
   const getConfig = (action: string) => ACTION_CONFIG[action] || DEFAULT_CONFIG;
 
-  const handleExportCSV = () => {
-    if (logs.length === 0) return;
-    const headers = ['Date', 'Time', 'Action', 'Description', 'Admin', 'Entity Type', 'Entity ID'];
-    const rows = logs.map(log => [
-      formatDate(log.createdAt),
-      formatTime(log.createdAt),
-      getConfig(log.action).label,
-      log.description,
-      getAdminName(log),
-      log.entityType || '',
-      log.entityId || '',
-    ]);
-    const csv = [headers, ...rows].map(r => r.map(c => `"${c}"`).join(',')).join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `audit_trail_${new Date().toISOString().slice(0, 10)}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
+  const handleExportCSV = async () => {
+    try {
+      const params: Record<string, unknown> = { limit: 10000 };
+      if (actionFilter !== 'ALL') params.action = actionFilter;
+      if (search.trim()) params.search = search.trim();
+
+      const res = await getAuditLogs(params as any);
+      if (res?.success) {
+        const allLogs = res.data.logs;
+        if (allLogs.length === 0) return;
+
+        const headers = ['Date', 'Time', 'Action', 'Description', 'Admin', 'Entity Type', 'Entity ID'];
+        const rows = allLogs.map((log: AuditLog) => [
+          formatDate(log.createdAt),
+          formatTime(log.createdAt),
+          getConfig(log.action).label,
+          log.description,
+          getAdminName(log),
+          log.entityType || '',
+          log.entityId || '',
+        ]);
+        const csv = [headers, ...rows].map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `audit_trail_${new Date().toISOString().slice(0, 10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+    } catch (error) {
+      console.error("Failed to export CSV", error);
+    }
   };
 
   if (initialLoad && loading) return <Loader />;
@@ -176,10 +190,48 @@ const AuditTrail: React.FC = () => {
           </button>
           <h1 className="page-title">Audit Trail</h1>
         </div>
-        <button className="btn btn-primary" onClick={handleExportCSV} disabled={logs.length === 0}>
-          <Download size={16} />
-          Export CSV
-        </button>
+
+        <div className="audit-toolbar-actions">
+          <div className="audit-search-box">
+            <Search size={16} className="audit-search-icon" />
+            <input
+              type="text"
+              placeholder="Search audit logs..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="audit-search-input"
+            />
+          </div>
+
+          <div className="audit-filter-wrapper" ref={filterRef}>
+            <button
+              className={`audit-filter-btn ${actionFilter !== 'ALL' ? 'active' : ''}`}
+              onClick={() => setShowFilterDropdown(!showFilterDropdown)}
+            >
+              <Filter size={16} />
+              {FILTER_OPTIONS.find(f => f.value === actionFilter)?.label || 'Filter'}
+              <ChevronDown size={14} />
+            </button>
+            {showFilterDropdown && (
+              <div className="audit-filter-dropdown">
+                {FILTER_OPTIONS.map(opt => (
+                  <button
+                    key={opt.value}
+                    className={`audit-filter-option ${actionFilter === opt.value ? 'selected' : ''}`}
+                    onClick={() => { setActionFilter(opt.value); setShowFilterDropdown(false); }}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <button className="btn btn-primary" onClick={handleExportCSV} disabled={logs.length === 0} style={{ padding: '10px 16px', borderRadius: '10px', height: '42px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem' }}>
+            <Download size={16} />
+            Export CSV
+          </button>
+        </div>
       </div>
 
       {/* Summary Cards */}
@@ -213,43 +265,7 @@ const AuditTrail: React.FC = () => {
         </div>
       </div>
 
-      {/* Search + Filter Bar */}
-      <div className="audit-toolbar">
-        <div className="audit-search-box">
-          <Search size={16} className="audit-search-icon" />
-          <input
-            type="text"
-            placeholder="Search audit logs..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="audit-search-input"
-          />
-        </div>
 
-        <div className="audit-filter-wrapper" ref={filterRef}>
-          <button
-            className={`audit-filter-btn ${actionFilter !== 'ALL' ? 'active' : ''}`}
-            onClick={() => setShowFilterDropdown(!showFilterDropdown)}
-          >
-            <Filter size={16} />
-            {FILTER_OPTIONS.find(f => f.value === actionFilter)?.label || 'Filter'}
-            <ChevronDown size={14} />
-          </button>
-          {showFilterDropdown && (
-            <div className="audit-filter-dropdown">
-              {FILTER_OPTIONS.map(opt => (
-                <button
-                  key={opt.value}
-                  className={`audit-filter-option ${actionFilter === opt.value ? 'selected' : ''}`}
-                  onClick={() => { setActionFilter(opt.value); setShowFilterDropdown(false); }}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
 
       {/* Results Count */}
       <div className="results-count">
@@ -291,14 +307,8 @@ const AuditTrail: React.FC = () => {
 
                       <div className="audit-meta">
                         <User size={14} className="text-muted" />
-                        <span>Performed by: </span>
+                        <span>Performed by:</span>
                         <span className="performer-name">{getAdminName(log)}</span>
-                        {log.entityType && (
-                          <>
-                            <span className="meta-separator">•</span>
-                            <span className="entity-badge">{log.entityType}</span>
-                          </>
-                        )}
                       </div>
                     </div>
                   </div>
@@ -311,14 +321,13 @@ const AuditTrail: React.FC = () => {
 
       {/* Infinite scroll sentinel */}
       <div ref={sentinelRef} style={{ height: 1 }} />
-      {loading && !initialLoad && (
-        <div className="loading-more">
-          <RefreshCw size={16} className="spin" />
-          Loading more...
-        </div>
+      {loading && logs.length > 0 && (
+        <>
+          <div style={{ height: 40 }} />
+          <InternalLoader />
+          <div style={{ height: 40 }} />
+        </>
       )}
-
-      <div style={{ height: 60 }} />
     </div>
   );
 };

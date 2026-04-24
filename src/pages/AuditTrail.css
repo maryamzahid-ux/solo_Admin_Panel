@@ -55,12 +55,7 @@
   margin-top: 2px;
 }
 
-/* ── Toolbar ── */
-.audit-toolbar {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 16px;
-}
+
 
 .audit-search-box {
   flex: 1;
@@ -94,6 +89,13 @@
 
 .audit-search-input::placeholder {
   color: #b0b0b0;
+}
+
+.audit-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 /* ── Filter Dropdown ── */
