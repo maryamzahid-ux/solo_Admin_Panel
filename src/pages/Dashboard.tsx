@@ -161,7 +161,6 @@ const Dashboard: React.FC = () => {
             {topCards?.activeUsers?.customers} Customers <br /> {topCards?.activeUsers?.professionals} Professionals
           </div>
         </div>
-
         <div className="stat-card">
           <div className="stat-header">
             <div className="stat-icon" style={{ background: '#fce7f3', color: '#db2777' }}><FileCheck size={20} /></div>

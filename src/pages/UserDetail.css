@@ -32,7 +32,7 @@
   background: white;
   border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
   border: 1px solid var(--border-color);
   margin-bottom: 24px;
 }
@@ -57,6 +57,7 @@
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
+  border: 1px solid var(--primary);
 }
 
 .profile-name {
@@ -68,14 +69,20 @@
   margin-bottom: 4px;
 }
 
-.profile-role, .user-role {
+.profile-role,
+.user-role {
   font-weight: 500;
   font-size: 0.9rem;
   padding: 2px 0;
 }
 
-.profile-role { color: #d97706; }
-.role-customer { color: var(--primary); }
+.profile-role {
+  color: #d97706;
+}
+
+.role-customer {
+  color: var(--primary);
+}
 
 .info-grid {
   display: grid;
@@ -194,7 +201,7 @@
   align-items: center;
   justify-content: center;
   color: var(--primary);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   cursor: pointer;
 }
 
@@ -202,7 +209,7 @@
   position: absolute;
   bottom: 12px;
   right: 12px;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.6);
   color: white;
   padding: 4px 8px;
   border-radius: 4px;
@@ -338,7 +345,7 @@
 .note-item:hover {
   border-color: var(--primary);
   background: white;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .note-header {
@@ -410,7 +417,13 @@
 }
 
 @media (max-width: 768px) {
-  .detail-main-card, .video-card, .side-card, .notes-section, .doc-card, .metric-card {
+
+  .detail-main-card,
+  .video-card,
+  .side-card,
+  .notes-section,
+  .doc-card,
+  .metric-card {
     padding: 20px;
     margin-bottom: 16px;
   }
@@ -459,7 +472,13 @@
 }
 
 @media (max-width: 480px) {
-  .detail-main-card, .video-card, .side-card, .notes-section, .doc-card, .metric-card {
+
+  .detail-main-card,
+  .video-card,
+  .side-card,
+  .notes-section,
+  .doc-card,
+  .metric-card {
     padding: 16px;
   }
 
@@ -485,4 +504,3 @@
     grid-template-columns: 1fr;
   }
 }
-
