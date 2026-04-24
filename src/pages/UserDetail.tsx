@@ -4,11 +4,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Modal from '../components/Modal';
 import { useGetUserDetails, useUpdateUserStatus, useUpdateAdminNotes } from '../api/admin.api';
 import Loader from '../components/Loader';
+import { useToast } from '../context/ToastContext';
 import './UserDetail.css';
 
 const UserDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const [user, setUser] = useState<any>(null);
   const [newNote, setNewNote] = useState('');
@@ -84,13 +86,7 @@ const UserDetail: React.FC = () => {
       if (res?.success) {
         setNewNote('');
         fetchUser(); // Refresh to show the new note in the list
-        openModal(
-          'success',
-          'Note Added',
-          'The admin note has been successfully added for this user.',
-          'Confirm',
-          () => setIsModalOpen(false)
-        );
+        showToast('Admin note added successfully');
       }
     } catch (error) {
       console.error("Failed to add note:", error);
