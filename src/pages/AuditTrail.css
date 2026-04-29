@@ -3,39 +3,55 @@
   animation: fadeIn 0.3s ease;
 }
 
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.page-header .page-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0;
+  color: #111827;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Summary Cards ── */
+/* ── Summary Stats ── */
 .summary-cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-bottom: 24px;
+  gap: 20px;
+  margin-bottom: 30px;
 }
 
 .summary-card {
   background: white;
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 20px;
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid #f1f5f9;
   display: flex;
   align-items: center;
-  gap: 16px;
-  transition: all 0.2s;
+  gap: 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
 }
 
 .summary-card:hover {
-  border-color: var(--primary);
-  box-shadow: 0 4px 12px rgba(92, 199, 40, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
 }
 
 .summary-icon-box {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -43,16 +59,17 @@
 }
 
 .summary-value {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #1a1a1a;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f172a;
   line-height: 1.2;
 }
 
 .summary-label {
-  font-size: 0.8rem;
-  color: #9a9a9a;
-  margin-top: 2px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #64748b;
+  margin-top: 4px;
 }
 
 
@@ -200,22 +217,23 @@
 .audit-logs-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  width: 100%;
+  gap: 16px;
 }
 
 .audit-log-item {
   background: white;
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  padding: 16px 20px;
+  border-radius: 16px;
+  border: 1px solid #f1f5f9;
+  padding: 24px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
   position: relative;
-  transition: all 0.2s;
+  overflow: hidden;
 }
 
 .audit-log-item:hover {
-  border-color: var(--primary);
-  box-shadow: 0 4px 12px rgba(92, 199, 40, 0.05);
+  border-color: #e2e8f0;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
 }
 
 .audit-log-header {
@@ -224,14 +242,13 @@
 
 .audit-action-box {
   display: flex;
-  gap: 16px;
-  width: 100%;
+  gap: 20px;
 }
 
 .audit-icon-box {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -240,6 +257,19 @@
 
 .audit-details {
   flex: 1;
+}
+
+.log-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.log-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .log-action-title {
@@ -252,7 +282,8 @@
 .log-action-desc {
   font-size: 0.85rem;
   color: #6a6a6a;
-  margin: 4px 0 0;
+  margin: 8px 0 0;
+  line-height: 1.5;
 }
 
 .audit-timestamp {
@@ -274,10 +305,20 @@
 .audit-meta {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 12px;
+  gap: 12px;
+  margin-top: 6px;
   font-size: 0.8rem;
-  color: #9a9a9a;
+  color: #64748b;
+}
+
+.audit-meta svg {
+  margin-right: 4px;
+}
+
+.performer-label, .entity-type-label {
+  color: #64748b;
+  font-weight: 700;
+  margin-right: 4px;
 }
 
 .performer-name {
@@ -285,8 +326,115 @@
   color: #1a1a1a;
 }
 
+.actor-type-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.entity-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  color: #475569;
+  text-transform: uppercase;
+}
+
+.entity-id-text {
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: #4b5563;
+  background: #f3f4f6;
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+
 .meta-separator {
   color: #d0d0d0;
+}
+
+/* ── Metadata Display ── */
+.log-metadata {
+  margin-top: 16px;
+}
+
+.meta-comparison {
+  display: inline-flex;
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 8px 16px;
+  gap: 24px;
+}
+
+.meta-val-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.meta-val-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}
+
+.meta-val-text {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.meta-val-text.active {
+  color: #0f172a;
+}
+
+.meta-comparison-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #cbd5e1;
+  padding-top: 10px;
+}
+
+.log-metadata-generic {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.meta-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+}
+
+.meta-tag-key {
+  color: #64748b;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.meta-tag-val {
+  color: #0f172a;
+  font-weight: 700;
 }
 
 .entity-badge {
