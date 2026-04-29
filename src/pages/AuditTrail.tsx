@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   ArrowLeft, User, CheckCircle, Settings, Trash2, CreditCard,
-  XCircle, Shield, Search, Filter, RefreshCw, ChevronDown, Activity, RotateCcw, Download
+  XCircle, Shield, Search, RefreshCw, ChevronDown, Activity, RotateCcw, Download,
+  Calendar, AlertTriangle, UserX, Pause, Play, ArrowRight
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useGetAuditLogs, type AuditLog } from '../api/audit.api';
@@ -10,29 +11,87 @@ import './AuditTrail.css';
 import InternalLoader from '../components/InternalLoader';
 
 const ACTION_CONFIG: Record<string, { icon: React.ElementType; color: string; iconColor: string; label: string }> = {
+  // User Actions
   USER_VERIFIED: { icon: CheckCircle, color: '#f0fdf4', iconColor: '#22c55e', label: 'User Verified' },
   USER_BLOCKED: { icon: XCircle, color: '#fff1f2', iconColor: '#e11d48', label: 'Account Deactivated' },
   USER_REACTIVATED: { icon: Shield, color: '#f0fdf4', iconColor: '#22c55e', label: 'Account Reactivated' },
   USER_DELETED: { icon: Trash2, color: '#fef2f2', iconColor: '#ef4444', label: 'Account Deleted' },
-  PAYOUT_APPROVED: { icon: CreditCard, color: '#f0f9ff', iconColor: '#0ea5e9', label: 'Payout Approved' },
-  PAYOUT_DECLINED: { icon: CreditCard, color: '#fff1f2', iconColor: '#e11d48', label: 'Payout Declined' },
+  
+  // Booking Actions
+  BOOKING_CREATED: { icon: Calendar, color: '#eff6ff', iconColor: '#3b82f6', label: 'Booking Created' },
+  BOOKING_CANCELLED: { icon: XCircle, color: '#fff1f2', iconColor: '#e11d48', label: 'Booking Cancelled' },
+  BOOKING_RESCHEDULED: { icon: RefreshCw, color: '#f0f9ff', iconColor: '#0ea5e9', label: 'Booking Rescheduled' },
+  BOOKING_STATUS_OVERRIDE: { icon: Activity, color: '#f5f3ff', iconColor: '#8b5cf6', label: 'Status Override' },
+  BOOKING_IN_DISPUTE: { icon: AlertTriangle, color: '#fff7ed', iconColor: '#ea580c', label: 'Booking Disputed' },
+  BOOKING_ACCEPTED: { icon: CheckCircle, color: '#f0fdf4', iconColor: '#22c55e', label: 'Booking Accepted' },
+  BOOKING_DECLINED: { icon: XCircle, color: '#fff1f2', iconColor: '#e11d48', label: 'Booking Declined' },
+  BOOKING_COMPLETED: { icon: CheckCircle, color: '#f0fdf4', iconColor: '#22c55e', label: 'Booking Completed' },
+  BOOKING_NO_SHOW: { icon: UserX, color: '#fef2f2', iconColor: '#ef4444', label: 'No Show Recorded' },
+
+  // Payment Actions
+  PAYMENT_HOLD: { icon: Pause, color: '#fffbeb', iconColor: '#f59e0b', label: 'Payment Held' },
+  PAYMENT_RELEASE: { icon: Play, color: '#f0fdf4', iconColor: '#22c55e', label: 'Payment Released' },
+  PAYMENT_REFUNDED: { icon: RotateCcw, color: '#fff1f2', iconColor: '#e11d48', label: 'Payment Refunded' },
+  PAYMENT_CAPTURE: { icon: CreditCard, color: '#f0f9ff', iconColor: '#0ea5e9', label: 'Payment Captured' },
+  PAYOUT_PROCESSED: { icon: CheckCircle, color: '#eff6ff', iconColor: '#3b82f6', label: 'Payout Completed' },
+  
+  // Settings
   SETTINGS_UPDATED: { icon: Settings, color: '#f5f3ff', iconColor: '#8b5cf6', label: 'Settings Updated' },
   SETTINGS_RESET: { icon: RotateCcw, color: '#fefce8', iconColor: '#d97706', label: 'Settings Reset' },
 };
 
 const DEFAULT_CONFIG = { icon: Activity, color: '#f1f5f9', iconColor: '#64748b', label: 'Action' };
 
-const FILTER_OPTIONS = [
-  { value: 'ALL', label: 'All Actions' },
-  { value: 'USER_VERIFIED', label: 'User Verified' },
-  { value: 'USER_BLOCKED', label: 'Account Deactivated' },
-  { value: 'USER_REACTIVATED', label: 'Account Reactivated' },
-  { value: 'USER_DELETED', label: 'Account Deleted' },
-  { value: 'PAYOUT_APPROVED', label: 'Payout Approved' },
-  { value: 'PAYOUT_DECLINED', label: 'Payout Declined' },
-  { value: 'SETTINGS_UPDATED', label: 'Settings Updated' },
-  { value: 'SETTINGS_RESET', label: 'Settings Reset' },
-];
+const MetadataDisplay: React.FC<{ metadata: Record<string, any> | null }> = ({ metadata }) => {
+  if (!metadata) return null;
+
+  const truncateMetadataValue = (val: any) => {
+    if (val === undefined || val === null) return 'None';
+    const str = String(val);
+    if (str.length > 15 && (str.includes('_') || str.includes('-') || /^[a-z0-9]+$/i.test(str))) {
+      return `${str.slice(0, 6)}...${str.slice(-6)}`;
+    }
+    return str;
+  };
+
+  // Handle common patterns like before/after values
+  const hasValues = metadata.before !== undefined || metadata.after !== undefined;
+  
+  if (hasValues) {
+    return (
+      <div className="log-metadata">
+        <div className="meta-comparison">
+          <div className="meta-val-box">
+            <span className="meta-val-label">From</span>
+            <span className="meta-val-text">{truncateMetadataValue(metadata.before)}</span>
+          </div>
+          <div className="meta-comparison-arrow">
+            <ArrowRight size={14} />
+          </div>
+          <div className="meta-val-box">
+            <span className="meta-val-label">To</span>
+            <span className="meta-val-text active">{truncateMetadataValue(metadata.after)}</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Generic key-value display for other metadata
+  const keys = Object.keys(metadata).filter(k => k !== 'timestamp');
+  if (keys.length === 0) return null;
+
+  return (
+    <div className="log-metadata-generic">
+      {keys.map(key => (
+        <div key={key} className="meta-tag">
+          <span className="meta-tag-key">{key}:</span>
+          <span className="meta-tag-val">{truncateMetadataValue(metadata[key])}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const AuditTrail: React.FC = () => {
   const navigate = useNavigate();
@@ -42,19 +101,27 @@ const AuditTrail: React.FC = () => {
   const [summary, setSummary] = useState({ totalActions: 0, activeAdmins: 0, latestActivity: null as string | null });
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [search, setSearch] = useState('');
-  const [actionFilter, setActionFilter] = useState('ALL');
-  const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+  const [actorFilter, setActorFilter] = useState('ALL');
+  const [showActorDropdown, setShowActorDropdown] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
+
+  const actorOptions = [
+    { value: 'ALL', label: 'All Actors' },
+    { value: 'ADMIN', label: 'Admin Actions', color: '#eff6ff', textColor: '#2563eb' },
+    { value: 'CUSTOMER', label: 'Customer Actions', color: '#f0fdf4', textColor: '#16a34a' },
+    { value: 'PROFESSIONAL', label: 'Pro Actions', color: '#f5f3ff', textColor: '#7c3aed' },
+    { value: 'SYSTEM', label: 'System Events', color: '#f8fafc', textColor: '#475569' },
+  ];
 
   const observerRef = useRef<IntersectionObserver | null>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
-  const filterRef = useRef<HTMLDivElement | null>(null);
+  const actorRef = useRef<HTMLDivElement | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const fetchLogs = useCallback(async (cursor?: string, append = false) => {
     const params: Record<string, unknown> = { limit: 20 };
     if (cursor) params.cursor = cursor;
-    if (actionFilter !== 'ALL') params.action = actionFilter;
+    if (actorFilter !== 'ALL') params.actorType = actorFilter;
     if (search.trim()) params.search = search.trim();
 
     const res = await getAuditLogs(params as any);
@@ -65,12 +132,12 @@ const AuditTrail: React.FC = () => {
       setSummary(data.summary);
       setInitialLoad(false);
     }
-  }, [actionFilter, search]);
+  }, [actorFilter, search]);
 
   // Initial fetch + filter/search change
   useEffect(() => {
     fetchLogs();
-  }, [actionFilter]);
+  }, [actorFilter, fetchLogs]);
 
   // Debounced search
   useEffect(() => {
@@ -79,7 +146,7 @@ const AuditTrail: React.FC = () => {
       fetchLogs();
     }, 400);
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
-  }, [search]);
+  }, [search, fetchLogs]);
 
   // Infinite scroll observer
   useEffect(() => {
@@ -98,11 +165,11 @@ const AuditTrail: React.FC = () => {
     return () => observerRef.current?.disconnect();
   }, [nextCursor, loading, fetchLogs]);
 
-  // Close filter dropdown on outside click
+  // Close filter dropdowns on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (filterRef.current && !filterRef.current.contains(e.target as Node)) {
-        setShowFilterDropdown(false);
+      if (actorRef.current && !actorRef.current.contains(e.target as Node)) {
+        setShowActorDropdown(false);
       }
     };
     document.addEventListener('mousedown', handler);
@@ -134,8 +201,19 @@ const AuditTrail: React.FC = () => {
     return formatDate(dateString);
   };
 
-  const getAdminName = (log: AuditLog) => {
-    if (!log.admin) return 'System';
+  const truncateId = (id: string | null) => {
+    if (!id) return '???';
+    if (id.length <= 8) return id;
+    return id.slice(-8);
+  };
+
+  const getActorName = (log: AuditLog) => {
+    if (log.actorType === 'SYSTEM') return 'System Auto-Trigger';
+    if (!log.admin) {
+      const id = truncateId(log.actorId);
+      if (id === '???') return `${log.actorType}`;
+      return `${log.actorType} #${id}`;
+    }
     const first = log.admin.firstName || '';
     const last = log.admin.lastName || '';
     const full = `${first} ${last}`.trim();
@@ -147,7 +225,7 @@ const AuditTrail: React.FC = () => {
   const handleExportCSV = async () => {
     try {
       const params: Record<string, unknown> = { limit: 10000 };
-      if (actionFilter !== 'ALL') params.action = actionFilter;
+      if (actorFilter !== 'ALL') params.actorType = actorFilter;
       if (search.trim()) params.search = search.trim();
 
       const res = await getAuditLogs(params as any);
@@ -155,13 +233,14 @@ const AuditTrail: React.FC = () => {
         const allLogs = res.data.logs;
         if (allLogs.length === 0) return;
 
-        const headers = ['Date', 'Time', 'Action', 'Description', 'Admin', 'Entity Type', 'Entity ID'];
+        const headers = ['Date', 'Time', 'Actor Type', 'Action', 'Description', 'Actor', 'Entity Type', 'Entity ID'];
         const rows = allLogs.map((log: AuditLog) => [
           formatDate(log.createdAt),
           formatTime(log.createdAt),
+          log.actorType,
           getConfig(log.action).label,
           log.description,
-          getAdminName(log),
+          getActorName(log),
           log.entityType || '',
           log.entityId || '',
         ]);
@@ -203,22 +282,22 @@ const AuditTrail: React.FC = () => {
             />
           </div>
 
-          <div className="audit-filter-wrapper" ref={filterRef}>
+          <div className="audit-filter-wrapper" ref={actorRef}>
             <button
-              className={`audit-filter-btn ${actionFilter !== 'ALL' ? 'active' : ''}`}
-              onClick={() => setShowFilterDropdown(!showFilterDropdown)}
+              className={`audit-filter-btn ${actorFilter !== 'ALL' ? 'active' : ''}`}
+              onClick={() => setShowActorDropdown(!showActorDropdown)}
             >
-              <Filter size={16} />
-              {FILTER_OPTIONS.find(f => f.value === actionFilter)?.label || 'Filter'}
+              <User size={16} />
+              {actorOptions.find(f => f.value === actorFilter)?.label || 'All Actors'}
               <ChevronDown size={14} />
             </button>
-            {showFilterDropdown && (
+            {showActorDropdown && (
               <div className="audit-filter-dropdown">
-                {FILTER_OPTIONS.map(opt => (
+                {actorOptions.map(opt => (
                   <button
                     key={opt.value}
-                    className={`audit-filter-option ${actionFilter === opt.value ? 'selected' : ''}`}
-                    onClick={() => { setActionFilter(opt.value); setShowFilterDropdown(false); }}
+                    className={`audit-filter-option ${actorFilter === opt.value ? 'selected' : ''}`}
+                    onClick={() => { setActorFilter(opt.value); setShowActorDropdown(false); }}
                   >
                     {opt.label}
                   </button>
@@ -265,27 +344,20 @@ const AuditTrail: React.FC = () => {
         </div>
       </div>
 
-
-
-      {/* Results Count */}
-      <div className="results-count">
-        {logs.length} {logs.length === 1 ? 'record' : 'records'} found
-        {actionFilter !== 'ALL' && <span className="filter-badge">{FILTER_OPTIONS.find(f => f.value === actionFilter)?.label}</span>}
-        {search.trim() && <span className="filter-badge">"{search.trim()}"</span>}
-      </div>
-
       {/* Audit Logs List */}
       <div className="audit-logs-list">
         {logs.length === 0 && !loading ? (
           <div className="empty-state">
             <Activity size={48} strokeWidth={1} />
             <h3>No audit logs found</h3>
-            <p>Actions performed by admins will appear here.</p>
+            <p>Actions performed across the platform will appear here.</p>
           </div>
         ) : (
           logs.map(log => {
             const config = getConfig(log.action);
+            const actorConfig = actorOptions.find(a => a.value === log.actorType) || actorOptions[actorOptions.length - 1];
             const IconComp = config.icon;
+
             return (
               <div key={log.id} className="audit-log-item">
                 <div className="audit-log-header">
@@ -295,8 +367,29 @@ const AuditTrail: React.FC = () => {
                     </div>
                     <div className="audit-details">
                       <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="log-action-title">{config.label}</h3>
+                        <div className="flex flex-col gap-1">
+                          <div className="log-title-row">
+                            <h3 className="log-action-title">{config.label}</h3>
+                            <div className="log-badges">
+                              <span className="actor-type-badge" style={{ background: actorConfig.color, color: actorConfig.textColor }}>
+                                {log.actorType}
+                              </span>
+                              {log.entityType && <span className="entity-badge">{log.entityType}</span>}
+                            </div>
+                          </div>
+                          <div className="audit-meta">
+                            <div className="flex items-center gap-1">
+                               <User size={16} className="text-primary " />
+                               <span className="performer-name">{getActorName(log)}</span>
+                            </div>
+                            {log.entityId && (
+                               <>
+                                 <div className="meta-separator">|</div>
+                                 <span className="entity-type-label">{log.entityType || 'Entity'}:</span>
+                                 <span className="entity-id-text">#{truncateId(log.entityId)}</span>
+                               </>
+                            )}
+                          </div>
                           <p className="log-action-desc">{log.description}</p>
                         </div>
                         <div className="audit-timestamp">
@@ -305,11 +398,7 @@ const AuditTrail: React.FC = () => {
                         </div>
                       </div>
 
-                      <div className="audit-meta">
-                        <User size={14} className="text-muted" />
-                        <span>Performed by:</span>
-                        <span className="performer-name">{getAdminName(log)}</span>
-                      </div>
+                      <MetadataDisplay metadata={log.metadata as any} />
                     </div>
                   </div>
                 </div>

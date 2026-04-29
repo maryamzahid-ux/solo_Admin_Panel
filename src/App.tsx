@@ -20,7 +20,6 @@ const AuditTrail = lazy(() => import('./pages/AuditTrail'));
 const Settings = lazy(() => import('./pages/Settings'));
 const CustomerDetail = lazy(() => import('./pages/CustomerDetail'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword'));
-const PayoutManagement = lazy(() => import('./pages/PayoutManagement'));
 
 function App() {
   return (
@@ -40,7 +39,6 @@ function App() {
                   <Route path="bookings" element={<BookingManagement />} />
                   <Route path="bookings/:id" element={<BookingDetail />} />
                   <Route path="audit" element={<AuditTrail />} />
-                  <Route path="payouts" element={<PayoutManagement />} />
                   <Route path="settings" element={<Settings />} />
                 </Route>
               </Route>

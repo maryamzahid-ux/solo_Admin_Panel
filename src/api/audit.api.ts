@@ -6,7 +6,8 @@ export interface AuditLog {
     description: string;
     entityType: string | null;
     entityId: string | null;
-    adminId: string | null;
+    actorType: string;
+    actorId: string | null;
     metadata: Record<string, unknown> | null;
     createdAt: string;
     admin: {
