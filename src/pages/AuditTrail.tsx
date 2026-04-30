@@ -70,8 +70,16 @@ const MetadataDisplay: React.FC<{ metadata: Record<string, any> | null }> = ({ m
   const hasValues = metadata.before !== undefined || metadata.after !== undefined;
   
   if (hasValues) {
+    const otherKeys = Object.keys(metadata).filter(k => !['before', 'after', 'timestamp', 'field'].includes(k));
+    
     return (
       <div className="log-metadata">
+        {metadata.field && (
+          <div className="meta-field-name">
+            <span className="meta-label">Changing:</span>
+            <span className="meta-value">{metadata.field}</span>
+          </div>
+        )}
         <div className="meta-comparison">
           <div className="meta-val-box">
             <span className="meta-val-label">From</span>
@@ -85,6 +93,17 @@ const MetadataDisplay: React.FC<{ metadata: Record<string, any> | null }> = ({ m
             <span className="meta-val-text active">{truncateMetadataValue(metadata.after)}</span>
           </div>
         </div>
+
+        {otherKeys.length > 0 && (
+          <div className="log-metadata-generic" style={{ marginTop: '12px' }}>
+            {otherKeys.map(key => (
+              <div key={key} className="meta-tag">
+                <span className="meta-tag-key">{key}:</span>
+                <span className="meta-tag-val">{truncateMetadataValue(metadata[key])}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     );
   }
