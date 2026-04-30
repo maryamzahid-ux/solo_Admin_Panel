@@ -334,7 +334,7 @@ const BookingDetail: React.FC = () => {
                   <span className="payment-value">€{(payment.afterStripeFee || booking.totalPrice).toFixed(2)}</span>
                 </div>
                 <div className="payment-row fee-row">
-                  <span className="text-muted">Platform Fee (10% of After Stripe)</span>
+                  <span className="text-muted">Platform Fee</span>
                   <span className="payment-value danger-text">-€{payment.platformFee?.toFixed(2)}</span>
                 </div>
                 <div className="divider-light total-divider" />
