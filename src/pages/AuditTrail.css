@@ -365,6 +365,24 @@
 .log-metadata {
   margin-top: 16px;
 }
+.meta-field-name {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.meta-field-name .meta-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.meta-field-name .meta-value {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1e293b;
+}
 
 .meta-comparison {
   display: inline-flex;
