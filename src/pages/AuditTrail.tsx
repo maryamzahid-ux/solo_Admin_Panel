@@ -47,6 +47,18 @@ const MetadataDisplay: React.FC<{ metadata: Record<string, any> | null }> = ({ m
 
   const truncateMetadataValue = (val: any) => {
     if (val === undefined || val === null) return 'None';
+    
+    // If it's an object, stringify it instead of showing [object Object]
+    if (typeof val === 'object') {
+      try {
+        const str = JSON.stringify(val);
+        if (str.length > 30) return `${str.slice(0, 15)}...${str.slice(-10)}`;
+        return str;
+      } catch {
+        return 'Object';
+      }
+    }
+
     const str = String(val);
     if (str.length > 15 && (str.includes('_') || str.includes('-') || /^[a-z0-9]+$/i.test(str))) {
       return `${str.slice(0, 6)}...${str.slice(-6)}`;
