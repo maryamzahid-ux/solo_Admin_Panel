@@ -1,17 +1,5 @@
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
+/* Page header styles moved to index.css */
 
-.page-title {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  font-size: 1.25rem;
-  font-weight: 700;
-}
 
 .filters-row {
   display: flex;
