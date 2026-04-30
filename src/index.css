@@ -356,3 +356,19 @@ h4 {
 .animate-spin {
   animation: spin 1s linear infinite;
 }
+
+/* Page Layout Utilities */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
